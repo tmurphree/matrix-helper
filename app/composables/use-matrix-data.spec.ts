@@ -1,13 +1,13 @@
 import { describe, expect, it, beforeEach } from 'vitest';
 import { useMatrixData } from './use-matrix-data';
 
-type MatrixDataApi = ReturnType<typeof useMatrixData>;
+type MatrixDataApi = Awaited<ReturnType<typeof useMatrixData>>;
 
 describe('useMatrixData', () => {
     let matrixApi: MatrixDataApi;
 
-    beforeEach(() => {
-        matrixApi = useMatrixData();
+    beforeEach(async () => {
+        matrixApi = await useMatrixData();
     });
 
     describe('matrix', () => {

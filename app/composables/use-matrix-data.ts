@@ -1,4 +1,4 @@
-export const useMatrixData = () => {
+export const useMatrixData = async () => {
     const matrix = ref<Map<number, number[]>>(new Map([
         [1, [0, 0]],
         [2, [0, 0]],
