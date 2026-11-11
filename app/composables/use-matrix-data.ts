@@ -1,5 +1,8 @@
 export const useMatrixData = () => {
-    const matrix = ref<Map<number, number[]>>(new Map());
+    const matrix = ref<Map<number, number[]>>(new Map([
+        [1, [0, 0]],
+        [2, [0, 0]],
+    ]));
     const isMatrixInitialized = ref(false);
 
     const getMatrixData = (row: number, column: number): number => {
