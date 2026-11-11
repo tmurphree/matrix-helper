@@ -146,5 +146,21 @@ describe('applyMatrixTransformation', () => {
                 })
             ).toThrow('rowIdToReplace must be 1 or 2');
         });
+
+        it('throws when both source rows and the replace row are the same', () => {
+            expect(() =>
+                applyMatrixTransformation({
+                    matrix,
+                    transformation: {
+                        type: 'add',
+                        coefficient01: 1,
+                        rowId01: 1,
+                        coefficient02: 1,
+                        rowId02: 1,
+                        rowIdToReplace: 1,
+                    },
+                })
+            ).toThrow('rowIdToReplace cannot be both 1 and 1');
+        });
     });
 });

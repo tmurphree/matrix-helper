@@ -61,6 +61,9 @@ const applyAddTransformation = ({
         throw new Error(`rowIdToReplace must be ${transformation.rowId01} or ${transformation.rowId02}`);
     }
 
+    if (transformation.rowIdToReplace === transformation.rowId01 && transformation.rowIdToReplace === transformation.rowId02) {
+        throw new Error(`rowIdToReplace cannot be both ${transformation.rowId01} and ${transformation.rowId02}`);
+    }
 
     const row01 = copyMatrixRow({ matrix, rowId: transformation.rowId01 });
     const row02 = copyMatrixRow({ matrix, rowId: transformation.rowId02 });

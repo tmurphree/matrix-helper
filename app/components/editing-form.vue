@@ -46,7 +46,7 @@
     type OperationType = 'multiply' | 'add';
 
     const addOperationRowId01 = ref(1);
-    const addOperationRowId02 = ref(1);
+    const addOperationRowId02 = ref(2);
     const addOperationValue01 = ref(1);
     const addOperationValue02 = ref(1);
     const addOperationRowToReplace = ref(1);
