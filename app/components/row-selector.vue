@@ -1,16 +1,12 @@
 <template>
-    <div class="row-selector">
-        <label class="row-selector__label" :for="selectId">row</label>
+    <div class="d-inline-flex align-items-center gap-1 row-selector">
+        <label class="form-label mb-0 small" :for="selectId">row</label>
         <select
             :id="selectId"
             v-model.number="selectedRow"
-            class="row-selector__select"
+            class="form-select form-select-sm"
         >
-            <option
-                v-for="row in rowOptions"
-                :key="row"
-                :value="row"
-            >
+            <option v-for="row in rowOptions" :key="row" :value="row">
                 {{ row }}
             </option>
         </select>
@@ -18,34 +14,18 @@
 </template>
 
 <script setup lang="ts">
-    const props = defineProps<{
-        matrixRowLength: number;
-    }>();
+const props = defineProps<{
+    matrixRowLength: number;
+}>();
 
-    const selectedRow = defineModel<number>('selectedRow', { required: true });
+const selectedRow = defineModel<number>('selectedRow', { required: true });
 
-    const selectId = useId();
+const selectId = useId();
 
-    const rowOptions = computed(() => {
-        return Array.from(
-            { length: props.matrixRowLength },
-            (_unused, index) => index + 1,
-        );
-    });
+const rowOptions = computed(() => {
+    return Array.from(
+        { length: props.matrixRowLength },
+        (_unused, index) => index + 1
+    );
+});
 </script>
-
-<style scoped>
-    .row-selector {
-        display: inline-block;
-        flex-direction: column;
-        gap: 0.25rem;
-    }
-
-    .row-selector__label {
-        margin-right: 5px;
-    }
-
-    .row-selector__select {
-        max-width: 100%;
-    }
-</style>
