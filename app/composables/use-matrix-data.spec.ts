@@ -33,13 +33,17 @@ describe('useMatrixData', () => {
             expect(matrixApi.getMatrixData(1, 2)).toBe(7);
         });
 
-        it('returns 0 when the row is missing', () => {
-            expect(matrixApi.getMatrixData(99, 1)).toBe(0);
+        it('throws when the row is missing', () => {
+            expect(() => matrixApi.getMatrixData(99, 1)).toThrow(
+                'Matrix row 99 is missing'
+            );
         });
 
-        it('returns 0 when the column index is missing in the row', () => {
+        it('throws when the column index is missing in the row', () => {
             matrixApi.matrix.value.set(3, []);
-            expect(matrixApi.getMatrixData(3, 1)).toBe(0);
+            expect(() => matrixApi.getMatrixData(3, 1)).toThrow(
+                'Matrix column 1 is missing in row 3'
+            );
         });
     });
 

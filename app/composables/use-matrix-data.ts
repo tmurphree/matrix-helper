@@ -8,9 +8,13 @@ export const useMatrixData = async () => {
     const getMatrixData = (row: number, column: number): number => {
         const rowData = matrix.value.get(row);
         if (rowData === undefined) {
-            return 0;
+            throw new Error(`Matrix row ${row} is missing`);
         }
-        return rowData[column - 1] ?? 0;
+        const value = rowData[column - 1];
+        if (value === undefined) {
+            throw new Error(`Matrix column ${column} is missing in row ${row}`);
+        }
+        return value;
     };
 
     const setMatrixData = (row: number, column: number, value: number): void => {
