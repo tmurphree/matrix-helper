@@ -27,43 +27,51 @@ describe('useMatrixData', () => {
         });
     });
 
-    describe('getMatrixData', () => {
-        it('returns the value at the given row and column', () => {
-            matrixApi.setMatrixData(1, 2, 7);
-            expect(matrixApi.getMatrixData(1, 2)).toBe(7);
+    describe('getMatrixRow', () => {
+        it('returns the row values', () => {
+            matrixApi.setMatrixData({ row: 1, column: 2, value: 7 });
+            expect(matrixApi.getMatrixRow(1)).toEqual([0, 7]);
         });
 
         it('throws when the row is missing', () => {
-            expect(() => matrixApi.getMatrixData(99, 1)).toThrow(
+            expect(() => matrixApi.getMatrixRow(99)).toThrow(
                 'Matrix row 99 is missing'
-            );
-        });
-
-        it('throws when the column index is missing in the row', () => {
-            matrixApi.matrix.value.set(3, []);
-            expect(() => matrixApi.getMatrixData(3, 1)).toThrow(
-                'Matrix column 1 is missing in row 3'
             );
         });
     });
 
     describe('setMatrixData', () => {
         it('updates an existing cell', () => {
-            matrixApi.setMatrixData(2, 1, 4);
+            matrixApi.setMatrixData({ row: 2, column: 1, value: 4 });
             expect(matrixApi.matrix.value.get(2)).toEqual([4, 0]);
         });
 
-        it('creates a row when the row key is missing', () => {
-            matrixApi.setMatrixData(3, 1, 2);
-            expect(matrixApi.matrix.value.get(3)).toEqual([2]);
+        it('throws when the row key is missing', () => {
+            expect(() =>
+                matrixApi.setMatrixData({ row: 3, column: 1, value: 2 })
+            ).toThrow('Matrix row 3 is missing');
         });
     });
 
     describe('resetMatrix', () => {
-        it('removes all rows', () => {
-            matrixApi.setMatrixData(1, 1, 9);
+        it('sets every cell to zero', () => {
+            matrixApi.setMatrixData({ row: 1, column: 1, value: 9 });
+            matrixApi.setMatrixData({ row: 1, column: 2, value: 3 });
+            matrixApi.setMatrixData({ row: 2, column: 1, value: 4 });
             matrixApi.resetMatrix();
-            expect(matrixApi.matrix.value.size).toBe(0);
+            expect(matrixApi.matrix.value).toEqual(
+                new Map([
+                    [1, [0, 0]],
+                    [2, [0, 0]],
+                ])
+            );
+        });
+
+        it('keeps existing row keys', () => {
+            matrixApi.setMatrixData({ row: 1, column: 2, value: 7 });
+            matrixApi.resetMatrix();
+            expect([...matrixApi.matrix.value.keys()]).toEqual([1, 2]);
+            expect(matrixApi.matrix.value.size).toBe(2);
         });
     });
 });

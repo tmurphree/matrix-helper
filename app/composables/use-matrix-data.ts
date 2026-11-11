@@ -1,37 +1,44 @@
 export const useMatrixData = async () => {
+    const isMatrixInitialized = ref(false);
     const matrix = ref<Map<number, number[]>>(new Map([
         [1, [0, 0]],
         [2, [0, 0]],
     ]));
-    const isMatrixInitialized = ref(false);
+    const matrixRowLength = ref(2);
 
-    const getMatrixData = (row: number, column: number): number => {
+    const getMatrixRow = (row: number): number[] => {
         const rowData = matrix.value.get(row);
+
         if (rowData === undefined) {
             throw new Error(`Matrix row ${row} is missing`);
         }
-        const value = rowData[column - 1];
-        if (value === undefined) {
-            throw new Error(`Matrix column ${column} is missing in row ${row}`);
-        }
-        return value;
+
+        return rowData;
     };
 
-    const setMatrixData = (row: number, column: number, value: number): void => {
-        const rowData = matrix.value.get(row) ?? [];
+    const setMatrixData = ({row, column, value }: 
+        {row: number, column: number, value: number}
+    ): void => {
+        const rowData = getMatrixRow(row);
         const nextRowData = [...rowData];
+
         nextRowData[column - 1] = value;
         matrix.value.set(row, nextRowData);
     };
 
     const resetMatrix = (): void => {
-        matrix.value.clear();
+        for (const key of matrix.value.keys()) {
+            const currentValue = matrix.value.get(key);
+
+            matrix.value.set(key, currentValue.fill(0));
+        }
     };
 
     return {
-        getMatrixData,
+        getMatrixRow,
         isMatrixInitialized,
         matrix,
+        matrixRowLength,
         resetMatrix,
         setMatrixData,
     };
