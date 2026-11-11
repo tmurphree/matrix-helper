@@ -5,10 +5,19 @@
         <div>
             <p> Debug matrix: {{ debugMatrix() }}</p>
         </div>
-        <div v-if="isMatrixInitialized">
-            <p>Matrix</p>
+        <div
+            data-name="add-transformations"
+            v-if="isMatrixInitialized"
+            class="add-transformations"
+        >
+            <EditingForm
+                class="add-transformations__main"
+                :matrix="matrix"
+                @update:matrix="onMatrixTransformation"
+            />
+            <MatrixHistorySidebar class="add-transformations__history" />
         </div>
-        <div v-else>
+        <div data-name="initial-data-entry" v-else>
             <p>Let's get started!  Enter the matrix data then click the "Start transformations" button.</p>
             <div>
                 <label for="matrix-data">Matrix Data</label>
@@ -44,6 +53,10 @@
         isMatrixInitialized.value = true;
     };
 
+    const onMatrixTransformation = () => {
+        console.log('todo replace this');
+    };
+
     const startOver = () => {
         const userAgreed = confirm('Are you sure?  This resets your matrix.');
         if (userAgreed) {
@@ -51,6 +64,12 @@
             resetMatrix();
         }
     };
+
+    // TODO Tom Murphree: remove this
+    setTimeout(() => {
+        matrix.value = new Map([[1, [9, 3]], [2, [2, 4]]]);
+        isMatrixInitialized.value = true;
+    }, 0);
 
     // TODO Tom Murphree: remove this
     const debugMatrix = (): number[][] => {
@@ -63,3 +82,24 @@
         return displayMatrix;
     };
 </script>
+
+<style scoped>
+    .add-transformations {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        align-items: stretch;
+    }
+
+    .add-transformations__main {
+        flex: 0 0 50%;
+        width: 50%;
+        box-sizing: border-box;
+    }
+
+    .add-transformations__history {
+        flex: 0 0 50%;
+        width: 50%;
+        box-sizing: border-box;
+    }
+</style>

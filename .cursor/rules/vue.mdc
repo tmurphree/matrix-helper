@@ -1,0 +1,11 @@
+---
+description: Rules to use when editing Vue files.
+applyTo: **/*.vue
+---
+
+# Script rules
+- Never use these as variable names:
+    - model
+- Never use defineModel without naming a semantic prop.
+    - Bad: const selectedRow = defineModel<number>({ required: true });
+    - Good: const rowId = defineModel<number>('rowId', { required: true });
