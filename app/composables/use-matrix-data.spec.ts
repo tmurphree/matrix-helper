@@ -53,6 +53,20 @@ describe('useMatrixData', () => {
         });
     });
 
+    describe('setMatrixRow', () => {
+        it('replaces the row values', () => {
+            matrixApi.setMatrixRow(1, [3, 5]);
+            expect(matrixApi.matrix.value.get(1)).toEqual([3, 5]);
+            expect(matrixApi.getMatrixRow(1)).toEqual([3, 5]);
+        });
+
+        it('throws when the row is missing', () => {
+            expect(() => matrixApi.setMatrixRow(99, [1, 2])).toThrow(
+                'Matrix row 99 is missing'
+            );
+        });
+    });
+
     describe('resetMatrix', () => {
         it('sets every cell to zero', () => {
             matrixApi.setMatrixData({ row: 1, column: 1, value: 9 });

@@ -5,22 +5,22 @@
         <div>
             <p> Debug matrix: {{ debugMatrix() }}</p>
         </div>
-        <!-- <div v-if="isMatrixInitialized">
+        <div v-if="isMatrixInitialized">
             <p>Matrix</p>
         </div>
-        <div v-else> -->
+        <div v-else>
             <p>Let's get started!  Enter the matrix data then click the "Start transformations" button.</p>
             <div>
                 <label for="matrix-data">Matrix Data</label>
                 <div v-for="row in matrixRowLength" :key="row">
                     <EditableMatrixRow
                         :model-value="getMatrixRow(row)"
-                        @update:model-value="applyRowValues(row, $event)"
+                        @update:model-value="setMatrixRow(row, $event)"
                     />
                 </div>
                 <button @click="startTransformations">Start transformations</button>
             </div>
-        <!-- </div> -->
+        </div>
          <button @click="startOver">Start over</button>
     </div>
 </template>
@@ -37,29 +37,29 @@
         matrix,
         matrixRowLength,
         resetMatrix,
-        setMatrixData,
+        setMatrixRow,
     } = await useMatrixData();
-
-    const applyRowValues = (row: number, values: number[]): void => {
-        values.forEach((value, index) => {
-            setMatrixData({ row, column: index + 1, value });
-        });
-    };
 
     const startTransformations = () => {
         isMatrixInitialized.value = true;
     };
 
     const startOver = () => {
-        resetMatrix();
+        const userAgreed = confirm('Are you sure?  This resets your matrix.');
+        if (userAgreed) {
+            isMatrixInitialized.value = false;
+            resetMatrix();
+        }
     };
 
     // TODO Tom Murphree: remove this
     const debugMatrix = (): number[][] => {
         const displayMatrix = [];
-        for (const [row, columns] of matrix.value.entries()) {
+
+        for (const columns of matrix.value.values()) {
             displayMatrix.push(columns);
         }
+
         return displayMatrix;
     };
 </script>

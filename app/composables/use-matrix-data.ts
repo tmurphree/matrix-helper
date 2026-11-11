@@ -16,8 +16,16 @@ export const useMatrixData = async () => {
         return rowData;
     };
 
-    const setMatrixData = ({row, column, value }: 
-        {row: number, column: number, value: number}
+    const resetMatrix = (): void => {
+        for (const key of matrix.value.keys()) {
+            const currentValue = matrix.value.get(key);
+
+            matrix.value.set(key, currentValue.fill(0));
+        }
+    };
+
+    const setMatrixData = (
+        {row, column, value }: {row: number, column: number, value: number}
     ): void => {
         const rowData = getMatrixRow(row);
         const nextRowData = [...rowData];
@@ -26,12 +34,9 @@ export const useMatrixData = async () => {
         matrix.value.set(row, nextRowData);
     };
 
-    const resetMatrix = (): void => {
-        for (const key of matrix.value.keys()) {
-            const currentValue = matrix.value.get(key);
-
-            matrix.value.set(key, currentValue.fill(0));
-        }
+    const setMatrixRow = (row: number, values: number[]): void => {
+        getMatrixRow(row);
+        matrix.value.set(row, [...values]);
     };
 
     return {
@@ -41,5 +46,6 @@ export const useMatrixData = async () => {
         matrixRowLength,
         resetMatrix,
         setMatrixData,
+        setMatrixRow,
     };
 };
