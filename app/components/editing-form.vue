@@ -4,7 +4,7 @@
         <p class="editing-form__notice">Placeholder — not wired up yet.</p>
         <div>
             <p>Current matrix</p>
-            <pre class="editing-form__matrix">{{ formatMatrix(matrix.values()) }}</pre>
+            <pre class="editing-form__matrix">{{ formatMatrix(Array.from(matrix.values())) }}</pre>
         </div>
         <div>
             <p>Next operation (placeholder)</p>
@@ -28,37 +28,62 @@
                             name="selected-operation-type"
                             value="add"
                         >
-                        Add <input type="number" v-model="addOperationValue01"> x <RowSelector v-model:selected-row="addOperationRowId01" :matrix-row-length="matrixRowLength" />
-                        to <input type="number" v-model="addOperationValue02"> x <RowSelector v-model:selected-row="addOperationRowId02" :matrix-row-length="matrixRowLength" />
+                        Add <input type="number" v-model.number="addOperationValue01"> x <RowSelector v-model:selected-row="addOperationRowId01" :matrix-row-length="matrixRowLength" />
+                        to <input type="number" v-model.number="addOperationValue02"> x <RowSelector v-model:selected-row="addOperationRowId02" :matrix-row-length="matrixRowLength" />
+                        and replace <RowSelector v-model:selected-row="addOperationRowToReplace" :matrix-row-length="matrixRowLength" />
                     </label>
                 </li>
             </ul>
-            <button type="button" disabled>Apply transformation</button>
+            <button type="button" @click="applyTransformation">Apply transformation</button>
         </div>
     </section>
 </template>
 
 <script setup lang="ts">
+    import { applyMatrixTransformation } from '../utils/apply-matrix-transformation';
+
     const matrix = defineModel<Map<number, number[]>>('matrix', { required: true });
     type OperationType = 'multiply' | 'add';
 
-    const selectedOperationType = ref<OperationType>('multiply');
+    const addOperationRowId01 = ref(1);
+    const addOperationRowId02 = ref(1);
+    const addOperationValue01 = ref(1);
+    const addOperationValue02 = ref(1);
+    const addOperationRowToReplace = ref(1);
     const multiplyOperationRowId = ref(1);
     const multiplyOperationValue = ref(1);
-    const addOperationValue01 = ref(1);
-    const addOperationRowId01 = ref(1);
-    const addOperationValue02 = ref(1);
-    const addOperationRowId02 = ref(1);
-
-
-    const placeholderOperation = {
-        type: 'Add multiple of one row to another',
-        expression: 'R2 ← R2 − 3R1',
-    };
+    const selectedOperationType = ref<OperationType>('multiply');
 
     const matrixRowLength = computed(() => matrix.value.size);
 
-    const formatMatrix = (rows: number[][]): string => {
+    const applyTransformation = (): void => {
+        if (selectedOperationType.value === 'multiply') {
+            matrix.value = applyMatrixTransformation({
+                matrix: matrix.value,
+                transformation: {
+                    type: 'multiply',
+                    rowId: multiplyOperationRowId.value,
+                    multiplier: multiplyOperationValue.value,
+                },
+            });
+
+            return;
+        }
+
+        matrix.value = applyMatrixTransformation({
+            matrix: matrix.value,
+            transformation: {
+                type: 'add',
+                coefficient01: addOperationValue01.value,
+                rowId01: addOperationRowId01.value,
+                coefficient02: addOperationValue02.value,
+                rowId02: addOperationRowId02.value,
+                rowIdToReplace: addOperationRowToReplace.value,
+            },
+        });
+    };
+
+    const formatMatrix = (rows: Array<number[]>): string => {
         return rows.map((row) => row.join('\t')).join('\n');
     };
 </script>

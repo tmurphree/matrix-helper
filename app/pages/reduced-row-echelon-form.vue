@@ -11,8 +11,8 @@
             class="add-transformations"
         >
             <EditingForm
+                v-model:matrix="matrix"
                 class="add-transformations__main"
-                :matrix="matrix"
                 @update:matrix="onMatrixTransformation"
             />
             <MatrixHistorySidebar class="add-transformations__history" />
