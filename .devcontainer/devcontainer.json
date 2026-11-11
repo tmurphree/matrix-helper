@@ -1,0 +1,25 @@
+{
+    "name": "learning-nuxt",
+    "dockerComposeFile": "docker-compose.yml",
+    "service": "dev",
+    "workspaceFolder": "/workspace",
+    "remoteUser": "node",
+    "initializeCommand": "docker rm -f learning-nuxt-dev || true",
+    "postCreateCommand": "npm install",
+    "forwardPorts": [3000],
+    "portsAttributes": {
+        "3000": {
+            "label": "Nuxt dev server",
+            "onAutoForward": "openBrowser"
+        }
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "dbaeumer.vscode-eslint",
+                "esbenp.prettier-vscode",
+                "Vue.volar"
+            ]
+        }
+    }
+}

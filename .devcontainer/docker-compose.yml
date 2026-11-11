@@ -1,0 +1,14 @@
+services:
+    dev:
+        build:
+            context: ..
+            dockerfile: .devcontainer/Dockerfile
+        container_name: learning-nuxt-dev
+        environment:
+            TZ: UTC
+        ports:
+            - "3000:3000"
+        volumes:
+            - ..:/workspace
+        command: sleep infinity
+        init: true
