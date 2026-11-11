@@ -1,7 +1,7 @@
 <template>
     <div class="editable-matrix-row">
         <input
-            v-for="(cell, columnIndex) in model"
+            v-for="(cell, columnIndex) in rowData"
             :key="columnIndex"
             type="number"
             :value="cell"
@@ -16,12 +16,12 @@
 </template>
 
 <script setup lang="ts">
-    const model = defineModel<number[]>({ required: true });
+    const rowData = defineModel<number[]>('rowData', { required: true });
 
     const updateCell = (columnIndex: number, value: number): void => {
-        const nextValues = [...model.value];
+        const nextValues = [...rowData.value];
         nextValues[columnIndex] = value;
-        model.value = nextValues;
+        rowData.value = nextValues;
     };
 </script>
 

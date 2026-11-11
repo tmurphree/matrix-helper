@@ -14,8 +14,8 @@
                 <label for="matrix-data">Matrix Data</label>
                 <div v-for="row in matrixRowLength" :key="row">
                     <EditableMatrixRow
-                        :model-value="getMatrixRow(row)"
-                        @update:model-value="setMatrixRow(row, $event)"
+                        :row-data="getMatrixRow(row)"
+                        @update:row-data="setMatrixRow(row, $event)"
                     />
                 </div>
                 <button @click="startTransformations">Start transformations</button>
