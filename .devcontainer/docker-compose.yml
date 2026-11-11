@@ -3,7 +3,7 @@ services:
         build:
             context: ..
             dockerfile: .devcontainer/Dockerfile
-        container_name: learning-nuxt-dev
+        container_name: matrix-helper-dev
         environment:
             TZ: UTC
         ports:

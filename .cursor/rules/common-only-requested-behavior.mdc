@@ -1,0 +1,15 @@
+---
+description: Do only what was asked.
+alwaysApply: true
+---
+
+# Only requested behavior
+Implement the request. Nothing else.
+
+- Do not add filtering, deduplication, sorting, normalization, or any other behavior unless I asked for that behavior.
+- Do not put behavior that was not asked for in a plan.
+- If you think of a behavior that was not asked for, ask me first before adding it to a plan.
+- If you think of a behavior that was not asked for, ask me first before simply adding it to the code.
+
+## Example
+I asked to download income-statement numbers to JSON.  The AI decided to keep one fact per period, chosen by the latest `filed` date.  This was not asked for.  The AI should not have added that behavior.

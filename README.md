@@ -1,14 +1,8 @@
-# TODO replace this title
+# matrix-helper
 
-# Initial setup
-1. Use GitHub to clone the repository.
-2. Update the .cursor folder with the contents of the agent-standards repository.
-3. Update the 'container_name' property in .devcontainer/docker-compose.yml with a sensible name that fits the project.
-4. Update the 'name' property in .devcontainer/devcontainer.json to the project name.
-5. Update the container name in the 'initializeCommand' property in .devcontainer/devcontainer.json so it matches 'container_name' in the .devcontainer/docker-compose.yml file.
-6. Update this README.md with the project name and description.
-7. Change the 'description' property in package.json to the project description.
-8. Change the 'name' property in package.json to the project name.
+Avoid manual errors when doing matrix operations.
+
+Photo by <a href="https://unsplash.com/@markusspiske?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Markus Spiske</a> on <a href="https://unsplash.com/photos/matrix-movie-still-iar-afB0QQw?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>
 
 
 # Development server
@@ -31,7 +25,7 @@ In a terminal:
 wsl
 # This gets you a shell in the container.
 cd to the project directory
-docker exec -it <container_name> bash
+docker exec -it matrix-helper-dev bash
 npm run dev
 ```
 

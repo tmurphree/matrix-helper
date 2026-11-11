@@ -1,10 +1,10 @@
 {
-    "name": "learning-nuxt",
+    "name": "matrix-helper",
     "dockerComposeFile": "docker-compose.yml",
     "service": "dev",
     "workspaceFolder": "/workspace",
     "remoteUser": "node",
-    "initializeCommand": "docker rm -f learning-nuxt-dev || true",
+    "initializeCommand": "docker rm -f matrix-helper-dev || true",
     "postCreateCommand": "npm install",
     "forwardPorts": [3000],
     "portsAttributes": {

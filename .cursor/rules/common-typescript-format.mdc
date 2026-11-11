@@ -1,0 +1,53 @@
+---
+description: Rules for TypeScript and JavaScript
+globs: "**/*.{js,ts,mjs,cjs}"
+alwaysApply: false
+---
+
+# Control flow
+- Always use curly braces on `if`, `else`, `for`, `while`, and `do` bodies (enforced by ESLint `curly`)
+- Prefer `if` over `switch`
+
+# Error handling
+- Always throw an Error
+- Never catch errors silently
+
+# Formatting
+- Follow `Prettier` (`prettier.config.js`) and `ESLint` (`.eslintrc.json`) rules
+- Use single quotes wherever possible
+- Prefer template literals to string addition.  E.g. prefer `Please go to ${destination}` over `'Please go to ' + destination`
+
+# Functions
+- Prefer arrow function expressions to hoisted function declarations
+    - Bad: `function foo(): void {}`
+    - Good: `const foo = (): void => {};`
+- Always add type annotations to parameters and return types
+- If there are more than two parameters, use a destructured object parameter
+- Always use parentheses around the return value when an arrow function returns an object without using `{}`.  E.g. `const foo = (): object => ({ bar: 'baz' });`
+
+# Naming
+- Use long, pronounceable variable names.  E.g. use `submissionResponse` instead of `subRes`
+    - Exception: It is OK to use `el` in a short arrow function.  e.g. `submissionArray.map((el) => el.id)`
+- Use kebab-case for filenames
+- Use a mix of kebab-case and periods for test filenames, e.g. `title-filter.ts`, `title-filter.spec.ts`
+- Use explanatory variables, not magic expressions
+
+
+# Operators
+- Never use `delete`
+
+# Test files
+- Test files should be named the same as the file to be tested with the extension `.spec.ts` (or `.test.ts` where the project already uses that)
+- Test files should be in the same folder as the file to be tested
+
+# Types and Interfaces
+- Prefer `type` over `interface` in most cases to prevent accidental declaration merging
+- You MUST use `type` for unions, intersections, primitives, and tuples
+- Use `interface` ONLY for the following scenarios:
+    - Extending the global environment (e.g., `Window`)
+    - Writing a library where we expect end users to extend the interface
+    - Increasing compile-time performance on projects where compile time exceeds 90 seconds
+    - Defining massive, deeply-nested object structures
+- Avoid adding types and interfaces in the same file as implementation code. Move them to a separate file
+    - Exception: test files can co-locate types with tests
+    - Exception: frontend (Nuxt/Vue) may co-locate component-local types in the same file

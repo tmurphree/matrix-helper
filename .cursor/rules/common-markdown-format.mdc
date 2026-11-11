@@ -1,0 +1,41 @@
+---
+description: "Markdown formatting instructions"
+globs: "**/*.md"
+alwaysApply: false
+---
+
+
+# Formatting
+- Use 4 spaces for indentation.
+- Keep the heading levels H1 by default.
+    Bad:
+    ```markdown
+    # Overall file title
+
+    ## Section title 1
+    Foo
+
+    ## Section title 2
+    Bar
+
+    ### Section 2 subsection
+    Baz
+    ```
+
+    Good:
+    ```markdown
+    # Overall file title
+
+    # Section title 1
+    Foo
+
+    # Section title 2
+    Bar
+
+    ## Section 2 subsection
+    Baz
+    ```
+
+- Don't leave a blank line after a heading.
+    - Exception: the heading is the overall file title.
+    - Exception: I asked you to leave space for me to fill in the section.  In that case leave 2 blank lines after the section heading.

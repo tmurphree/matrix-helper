@@ -1,0 +1,33 @@
+---
+description: General rules for how to behave when dealing with files
+alwaysApply: true
+---
+
+# Code generation
+- Always plan first
+    - Write a plan & get approval for changes > 30 lines of code
+    - Internal plan otherwise
+
+- Make high-quality, production-grade code
+
+- Return a copy instead of updating an argument by reference
+
+# Comments
+- Explain 'why', not 'what'.
+- Use descriptive names over comments.
+
+# Indentation and spaces
+- Indent using four spaces.
+- If more than 50% of the indentation is something else, use the more-common indentation.  Ask me if I want to change the indentation.
+
+# File formatting
+- Look for prettier and eslint rules.  Follow them if they are present.
+
+# Large files
+- For log files > 50KB, consider making a script that parses the log instead of just reading the file
+- For code files > 500 lines, make sure that adding new code to the file follows the single responsibility principle
+
+# Sources and citations
+- If the source is from the internet, include a link in markdown link format
+- If the source is from code, include the source in file:line format
+    - Never cite comments in code.  Only cite the code itself.

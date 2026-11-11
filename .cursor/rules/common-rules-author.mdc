@@ -1,0 +1,8 @@
+---
+description: How to create and edit Cursor rules
+globs: "**/*.mdc"
+alwaysApply: false
+---
+
+- Use the rules in common-markdown-format.mdc to format the rules file.
+- Always sort content alphabetically by heading.
