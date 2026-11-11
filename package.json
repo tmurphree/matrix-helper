@@ -11,6 +11,7 @@
         "@commitlint/config-conventional": "21.2.4",
         "@nuxt/test-utils": "4.3.4",
         "@types/node": "24.12.0",
+        "@vitest/coverage-v8": "5.1.0",
         "@vue/test-utils": "2.5.1",
         "eslint": "10.4.0",
         "eslint-config-prettier": "10.1.8",
@@ -46,6 +47,7 @@
         "prepare": "husky",
         "preview": "nuxt preview",
         "test": "vitest run",
+        "test:coverage": "vitest run --coverage",
         "test:watch": "vitest"
     },
     "type": "module",
