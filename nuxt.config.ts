@@ -1,4 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import { bootstrapColorModeHeadScript } from './app/bootstrap-color-mode-script';
+
 export default defineNuxtConfig({
     compatibilityDate: '2025-07-15',
     devtools: { enabled: true },
@@ -6,10 +8,16 @@ export default defineNuxtConfig({
         dirs: ['types'],
     },
     css: ['bootstrap/dist/css/bootstrap.min.css'],
-    modules: ['@nuxtjs/color-mode'],
-    colorMode: {
-        preference: 'system',
-        dataValue: 'bs-theme',
-        classSuffix: '',
+    app: {
+        head: {
+            script: [
+                {
+                    key: 'bootstrap-color-mode',
+                    innerHTML: bootstrapColorModeHeadScript,
+                    type: 'text/javascript',
+                    tagPosition: 'head',
+                },
+            ],
+        },
     },
 });
