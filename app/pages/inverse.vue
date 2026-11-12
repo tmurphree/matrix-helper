@@ -14,8 +14,8 @@
 </template>
 
 <script setup>
-useSeoMeta({
-    title: 'Inverse',
-    description: 'Find the inverse of a matrix',
-});
+    useSeoMeta({
+        title: 'Inverse',
+        description: 'Find the inverse of a matrix',
+    });
 </script>

@@ -76,53 +76,53 @@
 </template>
 
 <script setup lang="ts">
-useSeoMeta({
-    title: 'Reduced Row Echelon Form',
-    description: 'Reduce a matrix to reduced row echelon form',
-});
+    useSeoMeta({
+        title: 'Reduced Row Echelon Form',
+        description: 'Reduce a matrix to reduced row echelon form',
+    });
 
-const {
-    getMatrixRow,
-    isMatrixInitialized,
-    matrix,
-    matrixRowLength,
-    resetMatrix,
-    setMatrixRow,
-} = await useMatrixData();
+    const {
+        getMatrixRow,
+        isMatrixInitialized,
+        matrix,
+        matrixRowLength,
+        resetMatrix,
+        setMatrixRow,
+    } = await useMatrixData();
 
-const startTransformations = (): void => {
-    isMatrixInitialized.value = true;
-};
+    const startTransformations = (): void => {
+        isMatrixInitialized.value = true;
+    };
 
-const onMatrixTransformation = (): void => {
-    console.log('todo replace this');
-};
+    const onMatrixTransformation = (): void => {
+        console.log('todo replace this');
+    };
 
-const startOver = (): void => {
-    const userAgreed = confirm('Are you sure?  This resets your matrix.');
-    if (userAgreed) {
-        isMatrixInitialized.value = false;
-        resetMatrix();
-    }
-};
+    const startOver = (): void => {
+        const userAgreed = confirm('Are you sure?  This resets your matrix.');
+        if (userAgreed) {
+            isMatrixInitialized.value = false;
+            resetMatrix();
+        }
+    };
 
-// TODO Tom Murphree: remove this
-setTimeout(() => {
-    matrix.value = new Map([
-        [1, [9, 3]],
-        [2, [2, 4]],
-    ]);
-    isMatrixInitialized.value = true;
-}, 0);
+    // TODO Tom Murphree: remove this
+    setTimeout(() => {
+        matrix.value = new Map([
+            [1, [9, 3]],
+            [2, [2, 4]],
+        ]);
+        isMatrixInitialized.value = true;
+    }, 0);
 
-// TODO Tom Murphree: remove this
-const debugMatrix = (): number[][] => {
-    const displayMatrix = [];
+    // TODO Tom Murphree: remove this
+    const debugMatrix = (): number[][] => {
+        const displayMatrix = [];
 
-    for (const columns of matrix.value.values()) {
-        displayMatrix.push(columns);
-    }
+        for (const columns of matrix.value.values()) {
+            displayMatrix.push(columns);
+        }
 
-    return displayMatrix;
-};
+        return displayMatrix;
+    };
 </script>

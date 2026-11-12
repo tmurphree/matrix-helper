@@ -24,40 +24,40 @@
 </template>
 
 <script setup lang="ts">
-type HistoryPlaceholderEntry = {
-    step: number;
-    description: string;
-    matrix: number[][];
-};
+    type HistoryPlaceholderEntry = {
+        step: number;
+        description: string;
+        matrix: number[][];
+    };
 
-const placeholderHistory: HistoryPlaceholderEntry[] = [
-    {
-        step: 1,
-        description: 'Initial matrix',
-        matrix: [
-            [1, 2],
-            [3, 4],
-        ],
-    },
-    {
-        step: 2,
-        description: 'R2 ← R2 − 3R1',
-        matrix: [
-            [1, 2],
-            [0, -4],
-        ],
-    },
-    {
-        step: 3,
-        description: 'R2 ← −¼R2',
-        matrix: [
-            [1, 2],
-            [0, 1],
-        ],
-    },
-];
+    const placeholderHistory: HistoryPlaceholderEntry[] = [
+        {
+            step: 1,
+            description: 'Initial matrix',
+            matrix: [
+                [1, 2],
+                [3, 4],
+            ],
+        },
+        {
+            step: 2,
+            description: 'R2 ← R2 − 3R1',
+            matrix: [
+                [1, 2],
+                [0, -4],
+            ],
+        },
+        {
+            step: 3,
+            description: 'R2 ← −¼R2',
+            matrix: [
+                [1, 2],
+                [0, 1],
+            ],
+        },
+    ];
 
-const formatMatrix = (rows: number[][]): string => {
-    return rows.map((row) => row.join('\t')).join('\n');
-};
+    const formatMatrix = (rows: number[][]): string => {
+        return rows.map((row) => row.join('\t')).join('\n');
+    };
 </script>

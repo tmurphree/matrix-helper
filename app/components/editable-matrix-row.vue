@@ -17,17 +17,17 @@
 </template>
 
 <script setup lang="ts">
-const rowData = defineModel<number[]>('rowData', { required: true });
+    const rowData = defineModel<number[]>('rowData', { required: true });
 
-const updateCell = (columnIndex: number, value: number): void => {
-    const nextValues = [...rowData.value];
-    nextValues[columnIndex] = value;
-    rowData.value = nextValues;
-};
+    const updateCell = (columnIndex: number, value: number): void => {
+        const nextValues = [...rowData.value];
+        nextValues[columnIndex] = value;
+        rowData.value = nextValues;
+    };
 </script>
 
 <style scoped>
-.matrix-cell-input {
-    width: 4.5rem;
-}
+    .matrix-cell-input {
+        width: 4.5rem;
+    }
 </style>

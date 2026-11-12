@@ -44,8 +44,8 @@
 </template>
 
 <script setup>
-useSeoMeta({
-    title: 'Home',
-    description: 'The home page of the Matrix Helper',
-});
+    useSeoMeta({
+        title: 'Home',
+        description: 'The home page of the Matrix Helper',
+    });
 </script>

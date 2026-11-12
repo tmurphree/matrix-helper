@@ -109,56 +109,58 @@
 </template>
 
 <script setup lang="ts">
-import { applyMatrixTransformation } from '../utils/apply-matrix-transformation';
+    import { applyMatrixTransformation } from '../utils/apply-matrix-transformation';
 
-const matrix = defineModel<Map<number, number[]>>('matrix', { required: true });
-type OperationType = 'multiply' | 'add';
+    const matrix = defineModel<Map<number, number[]>>('matrix', {
+        required: true,
+    });
+    type OperationType = 'multiply' | 'add';
 
-const addOperationRowId01 = ref(1);
-const addOperationRowId02 = ref(2);
-const addOperationValue01 = ref(1);
-const addOperationValue02 = ref(1);
-const addOperationRowToReplace = ref(1);
-const multiplyOperationRowId = ref(1);
-const multiplyOperationValue = ref(1);
-const selectedOperationType = ref<OperationType>('multiply');
+    const addOperationRowId01 = ref(1);
+    const addOperationRowId02 = ref(2);
+    const addOperationValue01 = ref(1);
+    const addOperationValue02 = ref(1);
+    const addOperationRowToReplace = ref(1);
+    const multiplyOperationRowId = ref(1);
+    const multiplyOperationValue = ref(1);
+    const selectedOperationType = ref<OperationType>('multiply');
 
-const matrixRowLength = computed(() => matrix.value.size);
+    const matrixRowLength = computed(() => matrix.value.size);
 
-const applyTransformation = (): void => {
-    if (selectedOperationType.value === 'multiply') {
+    const applyTransformation = (): void => {
+        if (selectedOperationType.value === 'multiply') {
+            matrix.value = applyMatrixTransformation({
+                matrix: matrix.value,
+                transformation: {
+                    type: 'multiply',
+                    rowId: multiplyOperationRowId.value,
+                    multiplier: multiplyOperationValue.value,
+                },
+            });
+
+            return;
+        }
+
         matrix.value = applyMatrixTransformation({
             matrix: matrix.value,
             transformation: {
-                type: 'multiply',
-                rowId: multiplyOperationRowId.value,
-                multiplier: multiplyOperationValue.value,
+                type: 'add',
+                coefficient01: addOperationValue01.value,
+                rowId01: addOperationRowId01.value,
+                coefficient02: addOperationValue02.value,
+                rowId02: addOperationRowId02.value,
+                rowIdToReplace: addOperationRowToReplace.value,
             },
         });
+    };
 
-        return;
-    }
-
-    matrix.value = applyMatrixTransformation({
-        matrix: matrix.value,
-        transformation: {
-            type: 'add',
-            coefficient01: addOperationValue01.value,
-            rowId01: addOperationRowId01.value,
-            coefficient02: addOperationValue02.value,
-            rowId02: addOperationRowId02.value,
-            rowIdToReplace: addOperationRowToReplace.value,
-        },
-    });
-};
-
-const formatMatrix = (rows: Array<number[]>): string => {
-    return rows.map((row) => row.join('\t')).join('\n');
-};
+    const formatMatrix = (rows: Array<number[]>): string => {
+        return rows.map((row) => row.join('\t')).join('\n');
+    };
 </script>
 
 <style scoped>
-.matrix-number-input {
-    width: 4.5rem;
-}
+    .matrix-number-input {
+        width: 4.5rem;
+    }
 </style>

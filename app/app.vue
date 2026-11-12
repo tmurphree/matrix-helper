@@ -68,8 +68,8 @@
 </template>
 
 <script setup>
-useSeoMeta({
-    title: 'Matrix Helper',
-    description: 'Avoid common mistakes with matrix operations',
-});
+    useSeoMeta({
+        title: 'Matrix Helper',
+        description: 'Avoid common mistakes with matrix operations',
+    });
 </script>

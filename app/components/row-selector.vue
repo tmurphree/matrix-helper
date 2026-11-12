@@ -14,18 +14,18 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{
-    matrixRowLength: number;
-}>();
+    const props = defineProps<{
+        matrixRowLength: number;
+    }>();
 
-const selectedRow = defineModel<number>('selectedRow', { required: true });
+    const selectedRow = defineModel<number>('selectedRow', { required: true });
 
-const selectId = useId();
+    const selectId = useId();
 
-const rowOptions = computed(() => {
-    return Array.from(
-        { length: props.matrixRowLength },
-        (_unused, index) => index + 1
-    );
-});
+    const rowOptions = computed(() => {
+        return Array.from(
+            { length: props.matrixRowLength },
+            (_unused, index) => index + 1
+        );
+    });
 </script>

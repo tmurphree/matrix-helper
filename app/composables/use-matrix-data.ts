@@ -1,9 +1,11 @@
 export const useMatrixData = async () => {
     const isMatrixInitialized = ref(false);
-    const matrix = ref<Map<number, number[]>>(new Map([
-        [1, [0, 0]],
-        [2, [0, 0]],
-    ]));
+    const matrix = ref<Map<number, number[]>>(
+        new Map([
+            [1, [0, 0]],
+            [2, [0, 0]],
+        ])
+    );
     const matrixRowLength = ref(2);
 
     const getMatrixRow = (row: number): number[] => {
@@ -24,9 +26,15 @@ export const useMatrixData = async () => {
         }
     };
 
-    const setMatrixData = (
-        {row, column, value }: {row: number, column: number, value: number}
-    ): void => {
+    const setMatrixData = ({
+        row,
+        column,
+        value,
+    }: {
+        row: number;
+        column: number;
+        value: number;
+    }): void => {
         const rowData = getMatrixRow(row);
         const nextRowData = [...rowData];
 
