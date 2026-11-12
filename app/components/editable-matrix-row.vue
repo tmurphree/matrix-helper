@@ -1,8 +1,9 @@
 <template>
-    <div class="editable-matrix-row">
+    <div class="d-flex flex-wrap gap-2 editable-matrix-row">
         <input
             v-for="(cell, columnIndex) in rowData"
             :key="columnIndex"
+            class="form-control form-control-sm matrix-cell-input"
             type="number"
             :value="cell"
             @input="
@@ -26,9 +27,7 @@
 </script>
 
 <style scoped>
-    .editable-matrix-row {
-        display: flex;
-        flex-direction: row;
-        gap: 0.5rem;
+    .matrix-cell-input {
+        width: 4.5rem;
     }
 </style>

@@ -1,46 +1,87 @@
 <template>
-    <div>
-        <h1>Reduced Row Echelon Form</h1>
-        <p>This is a tool to help you with matrix operations.</p>
+    <div class="container">
+        <header class="mb-4">
+            <h1 class="h2 mb-2">Reduced Row Echelon Form</h1>
+            <p class="text-body-secondary mb-0">
+                This is a tool to help you with matrix operations.
+            </p>
+        </header>
         <div>
-            <p> Debug matrix: {{ debugMatrix() }}</p>
+            <p class="small font-monospace text-body-secondary mb-3">
+                Debug matrix: {{ debugMatrix() }}
+            </p>
         </div>
         <div
-            data-name="add-transformations"
             v-if="isMatrixInitialized"
-            class="add-transformations"
+            class="row g-4"
+            data-name="add-transformations"
         >
-            <EditingForm
-                v-model:matrix="matrix"
-                class="add-transformations__main"
-                @update:matrix="onMatrixTransformation"
-            />
-            <MatrixHistorySidebar class="add-transformations__history" />
-        </div>
-        <div data-name="initial-data-entry" v-else>
-            <p>Let's get started!  Enter the matrix data then click the "Start transformations" button.</p>
-            <div>
-                <label for="matrix-data">Matrix Data</label>
-                <div v-for="row in matrixRowLength" :key="row">
-                    <EditableMatrixRow
-                        :row-data="getMatrixRow(row)"
-                        @update:row-data="setMatrixRow(row, $event)"
-                    />
-                </div>
-                <button @click="startTransformations">Start transformations</button>
+            <div class="col-lg-6">
+                <EditingForm
+                    v-model:matrix="matrix"
+                    @update:matrix="onMatrixTransformation"
+                />
+            </div>
+            <div class="col-lg-6">
+                <MatrixHistorySidebar />
             </div>
         </div>
-         <button @click="startOver">Start over</button>
+        <div v-else class="card shadow-sm" data-name="initial-data-entry">
+            <div class="card-body">
+                <p class="mb-3">
+                    Let's get started! Enter the matrix data then click the
+                    "Start transformations" button.
+                </p>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold" for="matrix-data">
+                        Matrix data
+                    </label>
+                    <div id="matrix-data" class="d-flex flex-column gap-2">
+                        <div
+                            v-for="row in matrixRowLength"
+                            :key="row"
+                            class="row g-2 align-items-center"
+                        >
+                            <div class="col-auto text-body-secondary small">
+                                Row {{ row }}
+                            </div>
+                            <div class="col">
+                                <EditableMatrixRow
+                                    :row-data="getMatrixRow(row)"
+                                    @update:row-data="setMatrixRow(row, $event)"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button
+                    type="button"
+                    class="btn btn-primary"
+                    @click="startTransformations"
+                >
+                    Start transformations
+                </button>
+            </div>
+        </div>
+        <div class="mt-4">
+            <button
+                type="button"
+                class="btn btn-outline-secondary"
+                @click="startOver"
+            >
+                Start over
+            </button>
+        </div>
     </div>
 </template>
 
 <script setup lang="ts">
     useSeoMeta({
         title: 'Reduced Row Echelon Form',
-        description: 'Reduce a matrix to reduced row echelon form'
+        description: 'Reduce a matrix to reduced row echelon form',
     });
 
-    const { 
+    const {
         getMatrixRow,
         isMatrixInitialized,
         matrix,
@@ -49,15 +90,15 @@
         setMatrixRow,
     } = await useMatrixData();
 
-    const startTransformations = () => {
+    const startTransformations = (): void => {
         isMatrixInitialized.value = true;
     };
 
-    const onMatrixTransformation = () => {
+    const onMatrixTransformation = (): void => {
         console.log('todo replace this');
     };
 
-    const startOver = () => {
+    const startOver = (): void => {
         const userAgreed = confirm('Are you sure?  This resets your matrix.');
         if (userAgreed) {
             isMatrixInitialized.value = false;
@@ -67,7 +108,10 @@
 
     // TODO Tom Murphree: remove this
     setTimeout(() => {
-        matrix.value = new Map([[1, [9, 3]], [2, [2, 4]]]);
+        matrix.value = new Map([
+            [1, [9, 3]],
+            [2, [2, 4]],
+        ]);
         isMatrixInitialized.value = true;
     }, 0);
 
@@ -82,24 +126,3 @@
         return displayMatrix;
     };
 </script>
-
-<style scoped>
-    .add-transformations {
-        display: flex;
-        flex-direction: row;
-        width: 100%;
-        align-items: stretch;
-    }
-
-    .add-transformations__main {
-        flex: 0 0 50%;
-        width: 50%;
-        box-sizing: border-box;
-    }
-
-    .add-transformations__history {
-        flex: 0 0 50%;
-        width: 50%;
-        box-sizing: border-box;
-    }
-</style>

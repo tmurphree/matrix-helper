@@ -1,40 +1,109 @@
 <template>
-    <section class="editing-form" aria-label="Matrix transformations">
-        <h2>Transformations</h2>
-        <p class="editing-form__notice">Placeholder — not wired up yet.</p>
-        <div>
-            <p>Current matrix</p>
-            <pre class="editing-form__matrix">{{ formatMatrix(Array.from(matrix.values())) }}</pre>
-        </div>
-        <div>
-            <p>Next operation (placeholder)</p>
-            <ul class="editing-form__operations">
-                <li>
-                    <label class="editing-form__operation-choice">
-                        <input
-                            v-model="selectedOperationType"
-                            type="radio"
-                            name="selected-operation-type"
-                            value="multiply"
+    <section class="card shadow-sm h-100" aria-label="Matrix transformations">
+        <div class="card-body">
+            <h2 class="h4 card-title">Transformations</h2>
+            <p class="text-body-secondary fst-italic mb-3">
+                Placeholder — not wired up yet.
+            </p>
+            <div class="mb-4">
+                <h3 class="h6 text-uppercase text-body-secondary">
+                    Current matrix
+                </h3>
+                <pre
+                    class="bg-body-secondary bg-opacity-10 border rounded p-3 mb-0 font-monospace small"
+                    >{{ formatMatrix(Array.from(matrix.values())) }}</pre
+                >
+            </div>
+            <div>
+                <h3 class="h6 text-uppercase text-body-secondary">
+                    Next operation (placeholder)
+                </h3>
+                <ul class="list-group list-group-flush mb-3">
+                    <li class="list-group-item px-0">
+                        <label
+                            class="d-flex flex-wrap align-items-center gap-2"
                         >
-                        Multiply <RowSelector v-model:selected-row="multiplyOperationRowId" :matrix-row-length="matrixRowLength" /> by <input type="number" v-model="multiplyOperationValue">
-                    </label>
-                </li>
-                <li>
-                    <label class="editing-form__operation-choice">
-                        <input
-                            v-model="selectedOperationType"
-                            type="radio"
-                            name="selected-operation-type"
-                            value="add"
+                            <input
+                                v-model="selectedOperationType"
+                                class="form-check-input mt-0 flex-shrink-0"
+                                type="radio"
+                                name="selected-operation-type"
+                                value="multiply"
+                            />
+                            <span
+                                class="d-flex flex-wrap align-items-center gap-2"
+                            >
+                                Multiply
+                                <RowSelector
+                                    v-model:selected-row="
+                                        multiplyOperationRowId
+                                    "
+                                    :matrix-row-length="matrixRowLength"
+                                />
+                                by
+                                <input
+                                    v-model="multiplyOperationValue"
+                                    class="form-control form-control-sm matrix-number-input"
+                                    type="number"
+                                />
+                            </span>
+                        </label>
+                    </li>
+                    <li class="list-group-item px-0">
+                        <label
+                            class="d-flex flex-wrap align-items-center gap-2"
                         >
-                        Add <input type="number" v-model.number="addOperationValue01"> x <RowSelector v-model:selected-row="addOperationRowId01" :matrix-row-length="matrixRowLength" />
-                        to <input type="number" v-model.number="addOperationValue02"> x <RowSelector v-model:selected-row="addOperationRowId02" :matrix-row-length="matrixRowLength" />
-                        and replace <RowSelector v-model:selected-row="addOperationRowToReplace" :matrix-row-length="matrixRowLength" />
-                    </label>
-                </li>
-            </ul>
-            <button type="button" @click="applyTransformation">Apply transformation</button>
+                            <input
+                                v-model="selectedOperationType"
+                                class="form-check-input mt-0 flex-shrink-0"
+                                type="radio"
+                                name="selected-operation-type"
+                                value="add"
+                            />
+                            <span
+                                class="d-flex flex-wrap align-items-center gap-2"
+                            >
+                                Add
+                                <input
+                                    v-model.number="addOperationValue01"
+                                    class="form-control form-control-sm matrix-number-input"
+                                    type="number"
+                                />
+                                ×
+                                <RowSelector
+                                    v-model:selected-row="addOperationRowId01"
+                                    :matrix-row-length="matrixRowLength"
+                                />
+                                to
+                                <input
+                                    v-model.number="addOperationValue02"
+                                    class="form-control form-control-sm matrix-number-input"
+                                    type="number"
+                                />
+                                ×
+                                <RowSelector
+                                    v-model:selected-row="addOperationRowId02"
+                                    :matrix-row-length="matrixRowLength"
+                                />
+                                and replace
+                                <RowSelector
+                                    v-model:selected-row="
+                                        addOperationRowToReplace
+                                    "
+                                    :matrix-row-length="matrixRowLength"
+                                />
+                            </span>
+                        </label>
+                    </li>
+                </ul>
+                <button
+                    type="button"
+                    class="btn btn-primary"
+                    @click="applyTransformation"
+                >
+                    Apply transformation
+                </button>
+            </div>
         </div>
     </section>
 </template>
@@ -42,7 +111,9 @@
 <script setup lang="ts">
     import { applyMatrixTransformation } from '../utils/apply-matrix-transformation';
 
-    const matrix = defineModel<Map<number, number[]>>('matrix', { required: true });
+    const matrix = defineModel<Map<number, number[]>>('matrix', {
+        required: true,
+    });
     type OperationType = 'multiply' | 'add';
 
     const addOperationRowId01 = ref(1);
@@ -89,54 +160,7 @@
 </script>
 
 <style scoped>
-    .editing-form {
-        display: flex;
-        flex-direction: column;
-        gap: 0.75rem;
-    }
-
-    .editing-form__notice {
-        margin: 0;
-        font-style: italic;
-    }
-
-    .editing-form__matrix {
-        margin: 0;
-        font-family: ui-monospace, monospace;
-    }
-
-    .editing-form__operations {
-        margin: 0;
-        padding: 0;
-        list-style: none;
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-
-    .editing-form__operation-choice {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: 0.25rem 0.5rem;
-        cursor: pointer;
-    }
-
-    .editing-form__operation {
-        margin: 0;
-        display: grid;
-        gap: 0.5rem;
-    }
-
-    .editing-form__operation dt {
-        font-weight: 600;
-    }
-
-    .editing-form__operation dd {
-        margin: 0;
-    }
-
-    .editing-form input[type=number] {
-        max-width: 50px;
+    .matrix-number-input {
+        width: 4.5rem;
     }
 </style>
