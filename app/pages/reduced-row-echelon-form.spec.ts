@@ -7,8 +7,4 @@ describe('ReducedRowEchelonForm', () => {
         const component = await mountSuspended(ReducedRowEchelonForm);
         expect(component.html()).toContain('Reduced Row Echelon Form');
     });
-
-    describe('the initial state', () => {
-        it.skip('', () => {});
-    });
 });

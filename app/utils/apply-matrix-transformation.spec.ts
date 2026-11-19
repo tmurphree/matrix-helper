@@ -51,7 +51,7 @@ describe('applyMatrixTransformation', () => {
             ]);
         });
 
-        it.skip('adds the rows together and writes the result to the replace row', () => {
+        it('adds the rows together and writes the result to the replace row', () => {
             const { matrix: nextMatrix } = applyMatrixTransformation({
                 matrix,
                 transformation: {
