@@ -13,6 +13,9 @@ export type AddMatrixTransformation = {
     rowIdToReplace: number;
 };
 
-export type MatrixTransformation =
-    | MultiplyMatrixTransformation
-    | AddMatrixTransformation;
+export type MatrixTransformation = MultiplyMatrixTransformation | AddMatrixTransformation;
+
+export type MatrixTransformationResult = {
+    matrix: Map<number, number[]>;
+    steps: Map<number, number[]>[];
+};

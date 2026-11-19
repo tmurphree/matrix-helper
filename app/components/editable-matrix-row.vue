@@ -6,12 +6,7 @@
             class="form-control form-control-sm matrix-cell-input"
             type="number"
             :value="cell"
-            @input="
-                updateCell(
-                    columnIndex,
-                    Number(($event.target as HTMLInputElement).value)
-                )
-            "
+            @input="updateCell(columnIndex, Number(($event.target as HTMLInputElement).value))"
         />
     </div>
 </template>
