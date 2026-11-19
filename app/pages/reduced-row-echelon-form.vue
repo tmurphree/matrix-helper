@@ -4,9 +4,6 @@
             <h1 class="h2 mb-2">Reduced Row Echelon Form</h1>
             <p class="text-body-secondary mb-0">This is a tool to help you with matrix operations.</p>
         </header>
-        <div>
-            <p class="small font-monospace text-body-secondary mb-3">Debug matrix: {{ debugMatrix() }}</p>
-        </div>
         <div v-if="isMatrixInitialized" class="row g-4" data-name="add-transformations">
             <div class="col-lg-6">
                 <EditingForm v-model:matrix="matrix" @transformation-applied="onTransformationApplied" />
@@ -64,16 +61,5 @@
             resetMatrix();
             resetHistory();
         }
-    };
-
-    // TODO Tom Murphree: remove this
-    const debugMatrix = (): number[][] => {
-        const displayMatrix = [];
-
-        for (const columns of matrix.value.values()) {
-            displayMatrix.push(columns);
-        }
-
-        return displayMatrix;
     };
 </script>

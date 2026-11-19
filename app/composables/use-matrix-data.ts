@@ -26,15 +26,7 @@ export const useMatrixData = async () => {
         }
     };
 
-    const setMatrixData = ({
-        row,
-        column,
-        value,
-    }: {
-        row: number;
-        column: number;
-        value: number;
-    }): void => {
+    const setMatrixData = ({ row, column, value }: { row: number; column: number; value: number }): void => {
         const rowData = getMatrixRow(row);
         const nextRowData = [...rowData];
 

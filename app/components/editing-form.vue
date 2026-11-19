@@ -2,7 +2,6 @@
     <section class="card shadow-sm h-100" aria-label="Matrix transformations">
         <div class="card-body">
             <h2 class="h4 card-title">Transformations</h2>
-            <p class="text-body-secondary fst-italic mb-3">Placeholder — not wired up yet.</p>
             <div class="mb-4">
                 <h3 class="h6 text-uppercase text-body-secondary">Current matrix</h3>
                 <pre class="bg-body-secondary bg-opacity-10 border rounded p-3 mb-0 font-monospace small">{{ formatMatrix(Array.from(matrix.values())) }}</pre>
@@ -96,10 +95,6 @@
 
         matrix.value = result.matrix;
         emit('transformation-applied', result.steps);
-    };
-
-    const formatMatrix = (rows: Array<number[]>): string => {
-        return rows.map((row) => row.join('\t')).join('\n');
     };
 </script>
 

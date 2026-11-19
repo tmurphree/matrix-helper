@@ -34,9 +34,7 @@ describe('useMatrixData', () => {
         });
 
         it('throws when the row is missing', () => {
-            expect(() => matrixApi.getMatrixRow(99)).toThrow(
-                'Matrix row 99 is missing'
-            );
+            expect(() => matrixApi.getMatrixRow(99)).toThrow('Matrix row 99 is missing');
         });
     });
 
@@ -47,9 +45,7 @@ describe('useMatrixData', () => {
         });
 
         it('throws when the row key is missing', () => {
-            expect(() =>
-                matrixApi.setMatrixData({ row: 3, column: 1, value: 2 })
-            ).toThrow('Matrix row 3 is missing');
+            expect(() => matrixApi.setMatrixData({ row: 3, column: 1, value: 2 })).toThrow('Matrix row 3 is missing');
         });
     });
 
@@ -61,9 +57,7 @@ describe('useMatrixData', () => {
         });
 
         it('throws when the row is missing', () => {
-            expect(() => matrixApi.setMatrixRow(99, [1, 2])).toThrow(
-                'Matrix row 99 is missing'
-            );
+            expect(() => matrixApi.setMatrixRow(99, [1, 2])).toThrow('Matrix row 99 is missing');
         });
     });
 
