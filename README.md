@@ -8,7 +8,7 @@ The app works but is not finished. I made the repository public so you can see a
 # Project Summary
 Nuxt web app for guided matrix work: find a matrix inverse, reduce to reduced row echelon form (RREF), and apply row operations with a step-by-step history (stored in the browser) so you can see how the matrix changed at each step.
 
-# Business Problem Solved
+# Problem Solved
 Matrix work is easy to get wrong by hand. I discovered that while working with one of my children on matrix problems until 1 AM one day.
 
 This tool runs the operations for you so you can focus on the strategy of inverting the matrix or getting it to reduced row echelon form without worrying if you dropped a negative sign or mis-added somewhere.
