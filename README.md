@@ -2,45 +2,52 @@
 
 Avoid manual errors when doing matrix operations.
 
-Photo by <a href="https://unsplash.com/@markusspiske?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Markus Spiske</a> on <a href="https://unsplash.com/photos/matrix-movie-still-iar-afB0QQw?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>
+# Project status — in progress
+The app works but is not finished. I made the repository public so you can see an up-to-date example of how I write code.
 
+# Project Summary
+Nuxt web app for guided matrix work: find a matrix inverse, reduce to reduced row echelon form (RREF), and apply row operations with a step-by-step history (stored in the browser) so you can see how the matrix changed at each step.
 
-# Development server
-The project uses a development container for a consistent Node.js environment.
+# Business Problem Solved
+Matrix work is easy to get wrong by hand. I discovered that while working with one of my children on matrix problems until 1 AM one day.
 
-## Open the project in the container
-Use Cursor or VS Code with the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers):
+This tool runs the operations for you so you can focus on the strategy of inverting the matrix or getting it to reduced row echelon form without worrying if you dropped a negative sign or mis-added somewhere.
 
-* Open this repository in the editor.
-* Run **Dev Containers: Reopen in Container** from the Command Palette, or accept the **Reopen in Container** prompt.
-* Wait until the container is started.
+# Project setup
+```
+npm install
+```
 
-## Access the app from Windows
-Compose publishes container port **3000** to the host. After you change `.devcontainer/docker-compose.yml`, run **Dev Containers: Rebuild Container** so Docker picks up the new mapping.
-
-With `npm run dev` running inside the container, open **http://localhost:3000/** in a browser on the host. You can also use the editor **Ports** panel if it forwards 3000. If something else already uses port 3000 on the host, change the left side of the mapping in [`.devcontainer/docker-compose.yml`](.devcontainer/docker-compose.yml) (for example `3001:3000`) and use that port in the URL instead.
-
-In a terminal:
-```bash
-wsl
-# This gets you a shell in the container.
-cd to the project directory
-docker exec -it matrix-helper-dev bash
+## Development server
+```
 npm run dev
 ```
 
-Then wait for a while until you can see the site in a browser in Windows.
-
-# Production
-
-Build the application for production:
-```bash
+## Production build
+```
 npm run build
 ```
 
-Locally preview the production build:
-```bash
+## Preview production build
+```
 npm run preview
 ```
 
-See the [Nuxt deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+## Unit tests
+```
+npm run test
+```
+
+This repo includes a dev container (Node version pinned in `package.json`). Open the folder in Cursor or VS Code and use **Dev Containers: Reopen in Container**, then run the commands above inside the container.
+
+Deployment options are described in the [Nuxt deployment documentation](https://nuxt.com/docs/getting-started/deployment).
+
+# Technologies Used
+* Nuxt
+* Vue 3 (Composition API)
+* TypeScript
+* Vitest
+* ESLint and Prettier
+
+# Libraries & Plugins
+* Bootstrap
