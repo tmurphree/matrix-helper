@@ -11,16 +11,29 @@
         <div v-else class="card shadow-sm" data-name="initial-data-entry">
             <div class="card-body">
                 <p class="mb-3">Let's get started! Enter the matrix data then click the "Start transformations" button.</p>
+                <div class="mb-">
+                    <label class="form-label fw-semibold" for="row-count">Row count:</label>
+                    <input type="number" id="row-count" v-model.number="matrixRowLength" @change="changeRowCount" />
+                    <br />
+                    <label class="form-label fw-semibold" for="column-count">Column count:</label>
+                    <input type="number" id="column-count" v-model.number="matrixColumnLength" @change="changeColumnCount" />
+                </div>
                 <div class="mb-3">
                     <label class="form-label fw-semibold" for="matrix-data"> Matrix data </label>
                     <div id="matrix-data" class="d-flex flex-column gap-2">
                         <div v-for="row in matrixRowLength" :key="row" class="row g-2 align-items-center">
                             <div class="col-auto text-body-secondary small">Row {{ row }}</div>
                             <div class="col">
-                                <EditableMatrixRow :row-data="getMatrixRow(row)" @update:row-data="setMatrixRow(row, $event)" />
+                                <EditableMatrixRow
+                                    :row-data="getMatrixRow(row)"
+                                    @update:row-data="setMatrixRow(row, $event)"
+                                />
                             </div>
                         </div>
                     </div>
+                </div>
+                <div class="mb-3">
+                    <button type="button" class="btn btn-primary" @click="addIdentityMatrix">Add identity matrix</button>
                 </div>
                 <button type="button" class="btn btn-primary" @click="startTransformations">Start transformations</button>
             </div>
@@ -37,7 +50,18 @@
         description: 'The home page of the Matrix Helper',
     });
 
-    const { getMatrixRow, isMatrixInitialized, matrix, matrixRowLength, resetMatrix, setMatrixRow } = await useMatrixData();
+    const {
+        addIdentityMatrix,
+        changeColumnCount,
+        changeRowCount,
+        getMatrixRow,
+        isMatrixInitialized,
+        matrix,
+        matrixColumnLength,
+        matrixRowLength,
+        resetMatrix,
+        setMatrixRow,
+    } = await useMatrixData();
 
     const { history, isLocalStorageEnabled, recordSteps, resetHistory, startHistory } = useMatrixHistory();
 

@@ -1,5 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { clearHistory, isLocalStorageAvailable, MAX_MATRIX_HISTORY_STEPS, readHistory, recordHistory } from './matrix-history';
+import {
+    clearHistory,
+    isLocalStorageAvailable,
+    MAX_MATRIX_HISTORY_STEPS,
+    readHistory,
+    recordHistory,
+} from './matrix-history';
 
 const firstMatrix: Map<number, number[]> = new Map([
     [1, [5, 6]],

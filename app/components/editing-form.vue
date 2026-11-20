@@ -4,36 +4,74 @@
             <h2 class="h4 card-title">Transformations</h2>
             <div class="mb-4">
                 <h3 class="h6 text-uppercase text-body-secondary">Current matrix</h3>
-                <pre class="bg-body-secondary bg-opacity-10 border rounded p-3 mb-0 font-monospace small">{{ formatMatrix(Array.from(matrix.values())) }}</pre>
+                <pre class="bg-body-secondary bg-opacity-10 border rounded p-3 mb-0 font-monospace small">{{
+                    formatMatrix(Array.from(matrix.values()))
+                }}</pre>
             </div>
             <div>
                 <h3 class="h6 text-uppercase text-body-secondary">Next operation (placeholder)</h3>
                 <ul class="list-group list-group-flush mb-3">
                     <li class="list-group-item px-0">
                         <label class="d-flex flex-wrap align-items-center gap-2">
-                            <input v-model="selectedOperationType" class="form-check-input mt-0 flex-shrink-0" type="radio" name="selected-operation-type" value="multiply" />
+                            <input
+                                v-model="selectedOperationType"
+                                class="form-check-input mt-0 flex-shrink-0"
+                                type="radio"
+                                name="selected-operation-type"
+                                value="multiply"
+                            />
                             <span class="d-flex flex-wrap align-items-center gap-2">
                                 Multiply
-                                <RowSelector v-model:selected-row="multiplyOperationRowId" :matrix-row-length="matrixRowLength" />
+                                <RowSelector
+                                    v-model:selected-row="multiplyOperationRowId"
+                                    :matrix-row-length="matrixRowLength"
+                                />
                                 by
-                                <input v-model="multiplyOperationValue" class="form-control form-control-sm matrix-number-input" type="number" />
+                                <input
+                                    v-model="multiplyOperationValue"
+                                    class="form-control form-control-sm matrix-number-input"
+                                    type="number"
+                                />
                             </span>
                         </label>
                     </li>
                     <li class="list-group-item px-0">
                         <label class="d-flex flex-wrap align-items-center gap-2">
-                            <input v-model="selectedOperationType" class="form-check-input mt-0 flex-shrink-0" type="radio" name="selected-operation-type" value="add" />
+                            <input
+                                v-model="selectedOperationType"
+                                class="form-check-input mt-0 flex-shrink-0"
+                                type="radio"
+                                name="selected-operation-type"
+                                value="add"
+                            />
                             <span class="d-flex flex-wrap align-items-center gap-2">
                                 Add
-                                <input v-model.number="addOperationValue01" class="form-control form-control-sm matrix-number-input" type="number" />
+                                <input
+                                    v-model.number="addOperationValue01"
+                                    class="form-control form-control-sm matrix-number-input"
+                                    type="number"
+                                />
                                 ×
-                                <RowSelector v-model:selected-row="addOperationRowId01" :matrix-row-length="matrixRowLength" />
+                                <RowSelector
+                                    v-model:selected-row="addOperationRowId01"
+                                    :matrix-row-length="matrixRowLength"
+                                />
                                 to
-                                <input v-model.number="addOperationValue02" class="form-control form-control-sm matrix-number-input" type="number" />
+                                <input
+                                    v-model.number="addOperationValue02"
+                                    class="form-control form-control-sm matrix-number-input"
+                                    type="number"
+                                />
                                 ×
-                                <RowSelector v-model:selected-row="addOperationRowId02" :matrix-row-length="matrixRowLength" />
+                                <RowSelector
+                                    v-model:selected-row="addOperationRowId02"
+                                    :matrix-row-length="matrixRowLength"
+                                />
                                 and replace
-                                <RowSelector v-model:selected-row="addOperationRowToReplace" :matrix-row-length="matrixRowLength" />
+                                <RowSelector
+                                    v-model:selected-row="addOperationRowToReplace"
+                                    :matrix-row-length="matrixRowLength"
+                                />
                             </span>
                         </label>
                     </li>
