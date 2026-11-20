@@ -1,5 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-import { bootstrapColorModeHeadScript } from './app/bootstrap-color-mode-script';
+import { setBootstrapColorMode } from './app-head-scripts/set-bootstrap-color-mode';
 
 export default defineNuxtConfig({
     compatibilityDate: '2025-07-15',
@@ -13,7 +13,7 @@ export default defineNuxtConfig({
             script: [
                 {
                     key: 'bootstrap-color-mode',
-                    innerHTML: bootstrapColorModeHeadScript,
+                    innerHTML: setBootstrapColorMode,
                     type: 'text/javascript',
                     tagPosition: 'head',
                 },
