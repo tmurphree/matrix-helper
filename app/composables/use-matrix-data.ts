@@ -18,12 +18,38 @@ export const useMatrixData = async () => {
         matrixColumnLength.value++;
     };
 
+    const normalizeCount = (count: number): number => Math.max(Math.round(count), 1);
+
     const changeRowCount = (): void => {
-        matrixRowLength.value = Math.max(matrixRowLength.value, 1);
+        matrixRowLength.value = normalizeCount(matrixRowLength.value);
+
+        const nextMatrix = new Map<number, number[]>();
+
+        for (let row = 1; row <= matrixRowLength.value; row++) {
+            const existingRow = matrix.value.get(row);
+
+            nextMatrix.set(
+                row,
+                existingRow === undefined ? new Array<number>(matrixColumnLength.value).fill(0) : [...existingRow]
+            );
+        }
+
+        matrix.value = nextMatrix;
     };
 
     const changeColumnCount = (): void => {
-        matrixColumnLength.value = Math.max(matrixColumnLength.value, 1);
+        matrixColumnLength.value = normalizeCount(matrixColumnLength.value);
+
+        const nextMatrix = new Map<number, number[]>();
+
+        for (const [row, values] of matrix.value) {
+            nextMatrix.set(
+                row,
+                Array.from({ length: matrixColumnLength.value }, (_unused, index) => values[index] ?? 0)
+            );
+        }
+
+        matrix.value = nextMatrix;
     };
 
     const getMatrixRow = (row: number): number[] => {
