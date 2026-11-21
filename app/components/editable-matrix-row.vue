@@ -1,5 +1,6 @@
 <template>
     <div class="d-flex flex-wrap gap-2 editable-matrix-row">
+
         <input
             v-for="(cell, columnIndex) in rowData"
             :key="columnIndex"

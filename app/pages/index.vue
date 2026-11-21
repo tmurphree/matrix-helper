@@ -21,7 +21,7 @@
                 <div class="mb-3">
                     <label class="form-label fw-semibold" for="matrix-data"> Matrix data </label>
                     <div id="matrix-data" class="d-flex flex-column gap-2">
-                        <div v-for="row in matrixRowLength" :key="row" class="row g-2 align-items-center">
+                        <div v-for="row in roundToGreaterThanZero(matrixRowLength)" :key="row" class="row g-2 align-items-center">
                             <div class="col-auto text-body-secondary small">Row {{ row }}</div>
                             <div class="col">
                                 <EditableMatrixRow
@@ -60,6 +60,7 @@
         matrixColumnLength,
         matrixRowLength,
         resetMatrix,
+        roundToGreaterThanZero,
         setMatrixRow,
     } = await useMatrixData();
 

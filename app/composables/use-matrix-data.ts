@@ -10,19 +10,15 @@ export const useMatrixData = async () => {
     const matrixRowLength = ref(2);
 
     const addIdentityMatrix = (): void => {
-        for (let row = 1; row <= matrixRowLength.value; row++) {
-            for (let column = 1; column <= matrixColumnLength.value; column++) {
-                matrix.value.set(row, [...getMatrixRow(row), 0]);
-            }
-        }
-        matrixColumnLength.value++;
+        console.log('TODO - implement addIdentityMatrix');
     };
 
-    const normalizeCount = (count: number): number => Math.max(Math.round(count), 1);
+    const roundToGreaterThanZero = (count: number): number => Math.max(Math.round(count), 1);
 
     const changeRowCount = (): void => {
-        matrixRowLength.value = normalizeCount(matrixRowLength.value);
+        matrixRowLength.value = roundToGreaterThanZero(matrixRowLength.value);
 
+        console.debug('changeRowCount', matrixRowLength.value);
         const nextMatrix = new Map<number, number[]>();
 
         for (let row = 1; row <= matrixRowLength.value; row++) {
@@ -38,14 +34,17 @@ export const useMatrixData = async () => {
     };
 
     const changeColumnCount = (): void => {
-        matrixColumnLength.value = normalizeCount(matrixColumnLength.value);
+        matrixColumnLength.value = roundToGreaterThanZero(matrixColumnLength.value);
 
         const nextMatrix = new Map<number, number[]>();
 
         for (const [row, values] of matrix.value) {
+            const rowFillingFunction = (_unused: number, index: number) => values[index] ?? 0;
+
             nextMatrix.set(
                 row,
-                Array.from({ length: matrixColumnLength.value }, (_unused, index) => values[index] ?? 0)
+                // Works because Array.from's first argument is an array-like object.
+                Array.from({ length: matrixColumnLength.value }, rowFillingFunction)
             );
         }
 
@@ -93,6 +92,7 @@ export const useMatrixData = async () => {
         matrixColumnLength,
         matrixRowLength,
         resetMatrix,
+        roundToGreaterThanZero,
         setMatrixData,
         setMatrixRow,
     };
