@@ -13,7 +13,7 @@
                 <p class="mb-3">Let's get started! Enter the matrix data then click the "Start transformations" button.</p>
                 <div class="mb-">
                     <label class="form-label fw-semibold" for="row-count">Row count:</label>
-                    <input type="number" id="row-count" v-model.number="matrixRowLength" @change="changeRowCount" />
+                    <input type="number" id="row-count" v-model.number="matrixRowLength" />
                     <br />
                     <label class="form-label fw-semibold" for="column-count">Column count:</label>
                     <input type="number" id="column-count" v-model.number="matrixColumnLength" @change="changeColumnCount" />
@@ -65,6 +65,10 @@
     } = await useMatrixData();
 
     const { history, isLocalStorageEnabled, recordSteps, resetHistory, startHistory } = useMatrixHistory();
+
+    watch(matrixRowLength, (): void => {
+        changeRowCount();
+    });
 
     const startTransformations = (): void => {
         startHistory({ matrix: matrix.value });
