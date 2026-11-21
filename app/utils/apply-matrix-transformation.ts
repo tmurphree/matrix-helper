@@ -1,4 +1,9 @@
-import type { AddMatrixTransformation, MatrixTransformation, MatrixTransformationResult, MultiplyMatrixTransformation } from '../types/matrix-transformation';
+import type {
+    AddMatrixTransformation,
+    MatrixTransformation,
+    MatrixTransformationResult,
+    MultiplyMatrixTransformation,
+} from '../types/matrix-transformation';
 
 const IDENTITY_SCALE = 1;
 
@@ -16,7 +21,13 @@ const multiplyRowValues = ({ row, multiplier }: { row: number[]; multiplier: num
     return row.map((currentElement) => currentElement * multiplier);
 };
 
-const applyMultiplyTransformation = ({ matrix, transformation }: { matrix: Map<number, number[]>; transformation: MultiplyMatrixTransformation }): MatrixTransformationResult => {
+const applyMultiplyTransformation = ({
+    matrix,
+    transformation,
+}: {
+    matrix: Map<number, number[]>;
+    transformation: MultiplyMatrixTransformation;
+}): MatrixTransformationResult => {
     const nextMatrix = new Map(matrix);
 
     nextMatrix.set(
@@ -32,12 +43,24 @@ const applyMultiplyTransformation = ({ matrix, transformation }: { matrix: Map<n
     return { matrix: nextMatrix, steps };
 };
 
-const applyAddTransformation = ({ matrix, transformation }: { matrix: Map<number, number[]>; transformation: AddMatrixTransformation }): MatrixTransformationResult => {
-    if (transformation.rowIdToReplace !== transformation.rowId01 && transformation.rowIdToReplace !== transformation.rowId02) {
+const applyAddTransformation = ({
+    matrix,
+    transformation,
+}: {
+    matrix: Map<number, number[]>;
+    transformation: AddMatrixTransformation;
+}): MatrixTransformationResult => {
+    if (
+        transformation.rowIdToReplace !== transformation.rowId01 &&
+        transformation.rowIdToReplace !== transformation.rowId02
+    ) {
         throw new Error(`rowIdToReplace must be ${transformation.rowId01} or ${transformation.rowId02}`);
     }
 
-    if (transformation.rowIdToReplace === transformation.rowId01 && transformation.rowIdToReplace === transformation.rowId02) {
+    if (
+        transformation.rowIdToReplace === transformation.rowId01 &&
+        transformation.rowIdToReplace === transformation.rowId02
+    ) {
         throw new Error(`rowIdToReplace cannot be both ${transformation.rowId01} and ${transformation.rowId02}`);
     }
 
@@ -89,7 +112,13 @@ const applyAddTransformation = ({ matrix, transformation }: { matrix: Map<number
     return { matrix: new Map(workingMatrix), steps };
 };
 
-export const applyMatrixTransformation = ({ matrix, transformation }: { matrix: Map<number, number[]>; transformation: MatrixTransformation }): MatrixTransformationResult => {
+export const applyMatrixTransformation = ({
+    matrix,
+    transformation,
+}: {
+    matrix: Map<number, number[]>;
+    transformation: MatrixTransformation;
+}): MatrixTransformationResult => {
     if (transformation.type === 'multiply') {
         return applyMultiplyTransformation({ matrix, transformation });
     }
