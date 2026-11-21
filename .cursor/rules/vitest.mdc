@@ -1,0 +1,70 @@
+---
+description: Vitest unit test conventions for this repo
+globs: "**/*.spec.ts"
+alwaysApply: false
+---
+
+# Assertions on mocks
+- Prefer asserting call count and arguments: `toHaveBeenCalledTimes(n)` and `toHaveBeenCalledWith(...)`.
+- When comparing `Map` values in call arguments, build the expected `Map` explicitly or assert on `mock.calls[0][0]` fields.
+
+# File layout
+- Co-locate specs with the file under test: `foo.ts` and `foo.spec.ts` in the same folder.
+- Group tests with `describe` blocks named after the function, method, or behavior under test.
+- Import the system under test only **after** `vi.mock` declarations for modules it depends on.
+
+# Mock cleanup
+- Clear mocks in `afterEach` with `vi.clearAllMocks()` when using `vi.fn()` spies.
+- Add `vi.restoreAllMocks()` and `vi.unstubAllGlobals()` in `afterEach` only when the file uses `vi.spyOn` or `vi.stubGlobal`.
+- Add file-specific teardown in the same `afterEach` (for example `component.unmount()`).
+- Use `beforeEach` for per-test setup: `mockImplementation`, mount, seed data.
+- Call `localStorage.clear()` in `beforeEach` only when the **real** code under test reads or writes storage (not when the composable is fully mocked).
+
+# Module mocks
+## Module scope (required)
+Vitest hoists `vi.mock` to the top of the file before imports resolve. These belong at **module scope only**:
+- `vi.hoisted(() => ({ ... }))` — creates spies and composable stand-ins that the mock factory can reference.
+- `vi.mock('path', () => ({ ... }))` — registers the module replacement for the entire spec file.
+
+Never call `vi.mock` inside `describe`, `beforeEach`, or `it`.
+
+Order within the file:
+1. `vi.hoisted` + `vi.mock`
+2. import the system under test (and other imports that must see the mock)
+3. helpers, `describe`, per-test hooks
+
+## Per-test scope (`beforeEach`)
+Configure mocks and mount **inside** `describe` `beforeEach` (or a file-level `beforeEach` if you prefer):
+- `useExampleMock.mockImplementation(() => ({ ... }))` — minimum API surface the SUT needs for that test.
+- `mountSuspended` / `mount` when tests share a wrapper instance.
+
+Keep `vi.mock` thin: export only the hoisted composable mock. Do not put the full fake API inside the `vi.mock` factory unless it is static for every test.
+
+## Delegation pattern
+For composable delegation tests, hoist **two** `vi.fn()` values when needed:
+- A **composable mock** (for example `useExampleMock`) wired as `useExample` in `vi.mock`.
+- A **method spy** (for example `runSpy`) on the object returned from `mockImplementation`.
+
+Match the import path the bundler resolves (often a relative path from the spec file).
+
+# Nuxt and Vue
+- Use `mountSuspended` from `@nuxt/test-utils/runtime` for pages and components that use Nuxt composables or async `setup`.
+- Stub child components only when the test targets wiring on the parent, not child behavior.
+
+# Running tests
+- Run a single file with `npm test -- <path-to-spec>`.
+- Run coverage for one area with `npm run test:coverage -- <path-pattern>`.
+
+# Spies and globals
+- Prefer `vi.fn()` for collaborators you inject through `vi.mock`.
+- Use `vi.spyOn` when you need to observe a real implementation and optionally restore it.
+- Use `vi.stubGlobal` for `confirm`, `localStorage`, and other globals only when the real dependency runs; pair with `vi.unstubAllGlobals()` in `afterEach`.
+
+# Test directness
+Use the **most direct** trigger that still matches what the test claims to prove:
+- **Pure functions / utilities**: call the exported function directly with inputs; no mount.
+- **Composable delegation**: mock the composable; invoke the returned API or the caller that uses it; avoid DOM unless the composable is DOM-coupled.
+- **Parent event handlers**: `findComponent(Child)` and `$emit` the event the parent listens for; do not drive the child's full UI to test parent wiring.
+- **Integration / user flows**: use DOM queries and `trigger` when the behavior under test is the UI path itself.
+
+Do not use `defineExpose` on production components solely to call script-setup handlers from tests unless there is no event or public API to invoke.

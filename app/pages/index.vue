@@ -70,13 +70,13 @@
         changeRowCount();
     });
 
+    const onTransformationApplied = (steps: Map<number, number[]>[]): void => {
+        recordSteps({ steps });
+    };
+
     const startTransformations = (): void => {
         startHistory({ matrix: matrix.value });
         isMatrixInitialized.value = true;
-    };
-
-    const onTransformationApplied = (steps: Map<number, number[]>[]): void => {
-        recordSteps({ steps });
     };
 
     const startOver = (): void => {
