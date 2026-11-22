@@ -33,7 +33,20 @@
                     </div>
                 </div>
                 <div class="mb-3">
-                    <button type="button" class="btn btn-primary" @click="addIdentityMatrix">Add identity matrix</button>
+                    <span
+                        ref="addIdentityMatrixTooltipHost"
+                        class="d-inline-block"
+                        :tabindex="isRectangularMatrix ? 0 : undefined"
+                    >
+                        <button
+                            :disabled="isRectangularMatrix"
+                            type="button"
+                            class="btn btn-primary"
+                            @click="addIdentityMatrix"
+                        >
+                            Add identity matrix
+                        </button>
+                    </span>
                 </div>
                 <button
                     :disabled="showWarningModal.open"
@@ -56,6 +69,8 @@
 </template>
 
 <script setup lang="ts">
+    import type { Tooltip } from 'bootstrap';
+
     useSeoMeta({
         title: 'Home',
         description: 'The home page of the Matrix Helper',
@@ -77,6 +92,43 @@
     } = await useMatrixData();
 
     const { history, isLocalStorageEnabled, recordSteps, resetHistory, startHistory } = useMatrixHistory();
+
+    const isRectangularMatrix = computed(
+        (): boolean => matrixColumnLength.value !== matrixRowLength.value
+    );
+
+    const addIdentityMatrixTooltipHost = ref<HTMLElement | null>(null);
+
+    let addIdentityMatrixTooltip: Tooltip | undefined;
+
+    const syncAddIdentityMatrixTooltip = async (): Promise<void> => {
+        addIdentityMatrixTooltip?.dispose();
+        addIdentityMatrixTooltip = undefined;
+
+        const host = addIdentityMatrixTooltipHost.value;
+        if (!isRectangularMatrix.value || host === null) {
+            return;
+        }
+
+        const { Tooltip: BootstrapTooltip } = await import('bootstrap');
+        addIdentityMatrixTooltip = new BootstrapTooltip(host, {
+            title: 'Can\'t add an identity matrix to a rectangular matrix.',
+        });
+    };
+
+    watch(isRectangularMatrix, (): void => {
+        nextTick(() => {
+            void syncAddIdentityMatrixTooltip();
+        });
+    });
+
+    onMounted((): void => {
+        void syncAddIdentityMatrixTooltip();
+    });
+
+    onUnmounted((): void => {
+        addIdentityMatrixTooltip?.dispose();
+    });
 
     watch(matrixRowLength, (): void => {
         changeRowCount();
