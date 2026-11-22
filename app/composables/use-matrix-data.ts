@@ -20,6 +20,8 @@ export const useMatrixData = async () => {
 
 
         for (const [currentMatrixKey, currentMatrixValue] of matrix.value.entries()) {
+            // Every matrix row is written as an array, so an undefined row cannot occur through this composable.
+            /* v8 ignore if -- @preserve */
             if (typeof currentMatrixValue === 'undefined') {
                 continue;
             }
