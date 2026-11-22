@@ -8,6 +8,16 @@ alwaysApply: false
 - Prefer asserting call count and arguments: `toHaveBeenCalledTimes(n)` and `toHaveBeenCalledWith(...)`.
 - When comparing `Map` values in call arguments, build the expected `Map` explicitly or assert on `mock.calls[0][0]` fields.
 
+# Coverage
+- Reach coverage through tests first. Do not force impossible states in tests (for example, putting `undefined` into a typed `Map` or making `getItem` return `null` for a key that was just listed) only to cover a defensive branch.
+- When a branch cannot be reached through the public API or real collaborators, mark it with a v8 ignore hint in the source instead of writing a contrived test.
+    - Ignore the smallest scope possible: `/* v8 ignore if -- @preserve */`, `/* v8 ignore else -- @preserve */`, or `/* v8 ignore next -- @preserve */`.
+    - Use `/* v8 ignore start -- @preserve */` and `/* v8 ignore stop -- @preserve */` only when a smaller hint cannot cover the code.
+    - Keep `-- @preserve` so the TypeScript transform does not strip the hint.
+    - Put a one-line comment above the hint explaining why the branch is unreachable.
+- Never use v8 ignore hints to skip code that a test can reach.
+- Ask before adding a v8 ignore hint.
+
 # File layout
 - Co-locate specs with the file under test: `foo.ts` and `foo.spec.ts` in the same folder.
 - Group tests with `describe` blocks named after the function, method, or behavior under test.
