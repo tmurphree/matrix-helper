@@ -164,6 +164,56 @@ describe('useMatrixData', () => {
         });
     });
 
+    describe('addIdentityMatrix', () => {
+        it('opens the warning modal and leaves the matrix unchanged when the matrix is rectangular', () => {
+            matrixApi.matrixRowLength.value = 3;
+            matrixApi.matrixColumnLength.value = 2;
+
+            matrixApi.addIdentityMatrix();
+
+            expect(matrixApi.showWarningModal.open).toBe(true);
+            expect(matrixApi.showWarningModal.content).toBe(
+                'Can\'t add an identity matrix to a rectangular matrix.'
+            );
+            expect(matrixApi.matrix.value).toEqual(
+                new Map([
+                    [1, [0, 0]],
+                    [2, [0, 0]],
+                ])
+            );
+            expect(matrixApi.matrixColumnLength.value).toBe(2);
+        });
+
+        it('appends the identity block and doubles the column count on a default 2x2 matrix', () => {
+            matrixApi.addIdentityMatrix();
+
+            expect(matrixApi.showWarningModal.open).toBe(false);
+            expect(matrixApi.showWarningModal.content).toBe('');
+            expect(matrixApi.matrixColumnLength.value).toBe(4);
+            expect(matrixApi.matrix.value).toEqual(
+                new Map([
+                    [1, [0, 0, 1, 0]],
+                    [2, [0, 0, 0, 1]],
+                ])
+            );
+        });
+
+        it('preserves existing row data when appending the identity block', () => {
+            matrixApi.setMatrixRow(1, [5, 6]);
+            matrixApi.setMatrixRow(2, [7, 8]);
+
+            matrixApi.addIdentityMatrix();
+
+            expect(matrixApi.matrixColumnLength.value).toBe(4);
+            expect(matrixApi.matrix.value).toEqual(
+                new Map([
+                    [1, [5, 6, 1, 0]],
+                    [2, [7, 8, 0, 1]],
+                ])
+            );
+        });
+    });
+
     describe('resetMatrix', () => {
         it('sets every cell to zero', () => {
             matrixApi.setMatrixData({ row: 1, column: 1, value: 9 });

@@ -28,7 +28,6 @@ export const useMatrixData = async () => {
             const arrayToAppend = Array.from({ length: matrixColumnLength.value }, rowFillingFunction);
 
             matrix.value.set(currentMatrixKey, matrix.value.get(currentMatrixKey).concat(arrayToAppend));
-            console.log({ currentMatrixKey, currentMatrixValue: currentMatrixValue.join(), arrayToAppend: arrayToAppend.join() });
         }
 
         matrixColumnLength.value = matrixColumnLength.value * 2;
@@ -39,7 +38,6 @@ export const useMatrixData = async () => {
     const changeRowCount = (): void => {
         matrixRowLength.value = roundToGreaterThanZero(matrixRowLength.value);
 
-        console.debug('changeRowCount', matrixRowLength.value);
         const nextMatrix = new Map<number, number[]>();
 
         for (let row = 1; row <= matrixRowLength.value; row++) {
