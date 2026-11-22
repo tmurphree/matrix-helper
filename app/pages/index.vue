@@ -11,12 +11,12 @@
         <div v-else class="card shadow-sm" data-name="initial-data-entry">
             <div class="card-body">
                 <p class="mb-3">Let's get started! Enter the matrix data then click the "Start transformations" button.</p>
-                <div class="mb-">
+                <div>
                     <label class="form-label fw-semibold" for="row-count">Row count:</label>
-                    <input type="number" id="row-count" v-model.number="matrixRowLength" />
+                    <input class="ms-2" type="number" id="row-count" v-model.number="matrixRowLength" />
                     <br />
                     <label class="form-label fw-semibold" for="column-count">Column count:</label>
-                    <input type="number" id="column-count" v-model.number="matrixColumnLength" @change="changeColumnCount" />
+                    <input class="ms-2" type="number" id="column-count" v-model.number="matrixColumnLength" @change="changeColumnCount" />
                 </div>
                 <div class="mb-3">
                     <label class="form-label fw-semibold" for="matrix-data"> Matrix data </label>
@@ -35,12 +35,23 @@
                 <div class="mb-3">
                     <button type="button" class="btn btn-primary" @click="addIdentityMatrix">Add identity matrix</button>
                 </div>
-                <button type="button" class="btn btn-primary" @click="startTransformations">Start transformations</button>
+                <button
+                    :disabled="showWarningModal.open"
+                    type="button"
+                    class="btn btn-primary"
+                    @click="startTransformations"
+                >
+                    Start transformations
+                </button>
             </div>
         </div>
         <div class="mt-4">
-            <button type="button" class="btn btn-outline-secondary" @click="startOver">Start over</button>
+            <button type="button" class="btn btn-danger" @click="startOver">Start over</button>
         </div>
+        <ContentModal
+            v-model:open="showWarningModal.open"
+            :content="showWarningModal.content"
+        />
     </div>
 </template>
 
@@ -52,6 +63,7 @@
 
     const {
         addIdentityMatrix,
+        showWarningModal,
         changeColumnCount,
         changeRowCount,
         getMatrixRow,

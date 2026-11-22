@@ -6,11 +6,32 @@ export const useMatrixData = async () => {
             [2, [0, 0]],
         ])
     );
+    const showWarningModal = reactive({ open: false, content: '' });
     const matrixColumnLength = ref(2);
     const matrixRowLength = ref(2);
 
     const addIdentityMatrix = (): void => {
-        console.log('TODO - implement addIdentityMatrix');
+        if (matrixColumnLength.value !== matrixRowLength.value) {
+            showWarningModal.open = true;
+            showWarningModal.content = 'Can\'t add an identity matrix to a rectangular matrix.';
+
+            return;
+        }
+
+
+        for (const [currentMatrixKey, currentMatrixValue] of matrix.value.entries()) {
+            if (typeof currentMatrixValue === 'undefined') {
+                continue;
+            }
+
+            const rowFillingFunction = (_element: unknown, index: number): number => (index === currentMatrixKey - 1 ? 1 : 0);
+            const arrayToAppend = Array.from({ length: matrixColumnLength.value }, rowFillingFunction);
+
+            matrix.value.set(currentMatrixKey, matrix.value.get(currentMatrixKey).concat(arrayToAppend));
+            console.log({ currentMatrixKey, currentMatrixValue: currentMatrixValue.join(), arrayToAppend: arrayToAppend.join() });
+        }
+
+        matrixColumnLength.value = matrixColumnLength.value * 2;
     };
 
     const roundToGreaterThanZero = (count: number): number => Math.max(Math.round(count), 1);
@@ -95,5 +116,6 @@ export const useMatrixData = async () => {
         roundToGreaterThanZero,
         setMatrixData,
         setMatrixRow,
+        showWarningModal,
     };
 };
