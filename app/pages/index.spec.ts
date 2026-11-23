@@ -27,6 +27,7 @@ vi.mock('bootstrap', () => ({
     Tooltip: TooltipMock,
 }));
 
+import ConfirmModal from '../components/confirm-modal.vue';
 import ContentModal from '../components/content-modal.vue';
 import EditableMatrixRow from '../components/editable-matrix-row.vue';
 import EditingForm from '../components/editing-form.vue';
@@ -178,16 +179,21 @@ describe('Index', () => {
             await clickStartTransformations(component);
         });
 
-        it('resets the matrix and history and returns to data entry when the user confirms', async () => {
-            vi.stubGlobal(
-                'confirm',
-                vi.fn(() => true)
-            );
-
+        it('opens the confirm modal without clearing anything until the user answers', async () => {
             await findButton({ component, text: 'Start over' }).trigger('click');
 
-            expect(confirm).toHaveBeenCalledTimes(1);
-            expect(confirm).toHaveBeenCalledWith('Are you sure?  This resets your matrix.');
+            expect(component.findComponent(ConfirmModal).props('open')).toBe(true);
+            expect(component.findComponent(ConfirmModal).props('content')).toBe('Are you sure?  This resets your matrix.');
+            expect(resetHistorySpy).not.toHaveBeenCalled();
+            expect(component.find('[data-name="add-transformations"]').exists()).toBe(true);
+        });
+
+        it('resets the matrix and history and returns to data entry when the user answers yes', async () => {
+            await findButton({ component, text: 'Start over' }).trigger('click');
+            await component.findComponent(ConfirmModal).vm.$emit('answer', true);
+            await flushPromises();
+
+            expect(component.findComponent(ConfirmModal).props('open')).toBe(false);
             expect(resetHistorySpy).toHaveBeenCalledTimes(1);
             expect(component.find('[data-name="initial-data-entry"]').exists()).toBe(true);
             expect(getEditableRowData(component)).toEqual([
@@ -196,15 +202,12 @@ describe('Index', () => {
             ]);
         });
 
-        it('keeps the transformations view when the user declines', async () => {
-            vi.stubGlobal(
-                'confirm',
-                vi.fn(() => false)
-            );
-
+        it('keeps the transformations view when the user answers no', async () => {
             await findButton({ component, text: 'Start over' }).trigger('click');
+            await component.findComponent(ConfirmModal).vm.$emit('answer', false);
+            await flushPromises();
 
-            expect(confirm).toHaveBeenCalledTimes(1);
+            expect(component.findComponent(ConfirmModal).props('open')).toBe(false);
             expect(resetHistorySpy).not.toHaveBeenCalled();
             expect(component.find('[data-name="add-transformations"]').exists()).toBe(true);
         });
