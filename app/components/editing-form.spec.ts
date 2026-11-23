@@ -73,7 +73,7 @@ describe('EditingForm', () => {
 
     describe('formatCurrentMatrix', () => {
         it('shows the matrix formatted as tab-separated rows', () => {
-            expect(component.find('pre').element.textContent?.trim()).toBe('1\t2\n3\t4\n5\t6');
+            expect(component.find('pre').element.textContent).toBe('1\t2\n3\t4\n5\t6');
         });
 
         it('updates the display when the matrix prop changes', async () => {
@@ -81,7 +81,7 @@ describe('EditingForm', () => {
 
             await component.setProps({ matrix: nextMatrix });
 
-            expect(component.find('pre').element.textContent?.trim()).toBe('9\t8');
+            expect(component.find('pre').element.textContent).toBe('9\t8');
         });
     });
 

@@ -4,9 +4,7 @@
             <h2 class="h4 card-title">Transformations</h2>
             <div class="mb-4">
                 <h3 class="h6 text-uppercase text-body-secondary">Current matrix</h3>
-                <pre class="bg-body-secondary bg-opacity-10 border rounded p-3 mb-0 font-monospace small">
-                    {{ formatCurrentMatrix() }}
-                </pre>
+                <pre class="bg-body-secondary bg-opacity-10 border rounded p-3 mb-0 font-monospace small">{{ formatCurrentMatrix() }}</pre>
             </div>
             <div>
                 <h3 class="h6 text-uppercase text-body-secondary">Next operation (placeholder)</h3>

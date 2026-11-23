@@ -4,6 +4,8 @@ export const useMatrixHistory = () => {
     const history = ref<Map<number, number[]>[]>([]);
     const isLocalStorageEnabled = ref(false);
 
+    const hasHistory = computed((): boolean => history.value.length > 0);
+
     const loadHistory = (): void => {
         history.value = readHistory();
     };
@@ -35,6 +37,7 @@ export const useMatrixHistory = () => {
     });
 
     return {
+        hasHistory,
         history,
         isLocalStorageEnabled,
         loadHistory,

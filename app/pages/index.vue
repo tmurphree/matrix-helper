@@ -98,7 +98,7 @@
         setMatrixRow,
     } = await useMatrixData();
 
-    const { history, isLocalStorageEnabled, recordSteps, resetHistory, startHistory } = useMatrixHistory();
+    const { hasHistory, history, isLocalStorageEnabled, recordSteps, resetHistory, startHistory } = useMatrixHistory();
 
     const isRectangularMatrix = computed((): boolean => matrixColumnLength.value !== matrixRowLength.value);
 
@@ -129,6 +129,10 @@
 
     onMounted((): void => {
         void syncAddIdentityMatrixTooltip();
+        if (hasHistory.value) {
+            isMatrixInitialized.value = true;
+            matrix.value = history.value[history.value.length - 1];
+        }
     });
 
     onUnmounted((): void => {
