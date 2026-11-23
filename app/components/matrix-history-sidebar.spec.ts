@@ -12,8 +12,10 @@ const secondMatrix: Map<number, number[]> = new Map([
     [2, [3, 4]],
 ]);
 
+type MountedMatrixHistorySidebar = Awaited<ReturnType<typeof mountSuspended<typeof MatrixHistorySidebar>>>;
+
 describe('MatrixHistorySidebar', () => {
-    let component: Awaited<ReturnType<typeof mountSuspended<typeof MatrixHistorySidebar>>>;
+    let component: MountedMatrixHistorySidebar;
 
     beforeEach(async (): Promise<void> => {
         component = await mountSuspended(MatrixHistorySidebar, {

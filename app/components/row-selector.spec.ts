@@ -3,8 +3,10 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import RowSelector from './row-selector.vue';
 
+type MountedRowSelector = Awaited<ReturnType<typeof mountSuspended<typeof RowSelector>>>;
+
 describe('RowSelector', () => {
-    let component: Awaited<ReturnType<typeof mountSuspended<typeof RowSelector>>>;
+    let component: MountedRowSelector;
 
     beforeEach(async (): Promise<void> => {
         component = await mountSuspended(RowSelector, {

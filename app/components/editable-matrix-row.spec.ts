@@ -3,8 +3,10 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import EditableMatrixRow from './editable-matrix-row.vue';
 
+type MountedEditableMatrixRow = Awaited<ReturnType<typeof mountSuspended<typeof EditableMatrixRow>>>;
+
 describe('EditableMatrixRow', () => {
-    let component: Awaited<ReturnType<typeof mountSuspended<typeof EditableMatrixRow>>>;
+    let component: MountedEditableMatrixRow;
     let rowData: number[];
 
     beforeEach(async (): Promise<void> => {

@@ -4,9 +4,9 @@
             <h2 class="h4 card-title">Transformations</h2>
             <div class="mb-4">
                 <h3 class="h6 text-uppercase text-body-secondary">Current matrix</h3>
-                <pre class="bg-body-secondary bg-opacity-10 border rounded p-3 mb-0 font-monospace small">{{
-                    formatMatrix(Array.from(matrix.values()))
-                }}</pre>
+                <pre class="bg-body-secondary bg-opacity-10 border rounded p-3 mb-0 font-monospace small">
+                    {{ formatCurrentMatrix() }}
+                </pre>
             </div>
             <div>
                 <h3 class="h6 text-uppercase text-body-secondary">Next operation (placeholder)</h3>
@@ -85,26 +85,38 @@
 <script setup lang="ts">
     import type { MatrixTransformation } from '../types/matrix-transformation';
     import { applyMatrixTransformation } from '../utils/apply-matrix-transformation';
+    import { formatMatrix } from '../utils/format-matrix';
+
+    type OperationType = 'multiply' | 'add';
+
+    const emit = defineEmits<{
+        'transformation-applied': [steps: Map<number, number[]>[]];
+    }>();
 
     const matrix = defineModel<Map<number, number[]>>('matrix', {
         required: true,
     });
-    type OperationType = 'multiply' | 'add';
 
     const addOperationRowId01 = ref(1);
     const addOperationRowId02 = ref(2);
+    const addOperationRowToReplace = ref(1);
     const addOperationValue01 = ref(1);
     const addOperationValue02 = ref(1);
-    const addOperationRowToReplace = ref(1);
     const multiplyOperationRowId = ref(1);
     const multiplyOperationValue = ref(1);
     const selectedOperationType = ref<OperationType>('multiply');
 
     const matrixRowLength = computed(() => matrix.value.size);
 
-    const emit = defineEmits<{
-        'transformation-applied': [steps: Map<number, number[]>[]];
-    }>();
+    const applyTransformation = (): void => {
+        const result = applyMatrixTransformation({
+            matrix: matrix.value,
+            transformation: buildTransformation(),
+        });
+
+        matrix.value = result.matrix;
+        emit('transformation-applied', result.steps);
+    };
 
     const buildTransformation = (): MatrixTransformation => {
         if (selectedOperationType.value === 'multiply') {
@@ -125,14 +137,8 @@
         };
     };
 
-    const applyTransformation = (): void => {
-        const result = applyMatrixTransformation({
-            matrix: matrix.value,
-            transformation: buildTransformation(),
-        });
-
-        matrix.value = result.matrix;
-        emit('transformation-applied', result.steps);
+    const formatCurrentMatrix = (): string => {
+        return formatMatrix(Array.from(matrix.value.values()));
     };
 </script>
 

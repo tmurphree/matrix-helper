@@ -9,8 +9,10 @@ mockNuxtImport('useSeoMeta', () => useSeoMetaMock);
 
 import App from './app.vue';
 
+type MountedApp = Awaited<ReturnType<typeof mountSuspended<typeof App>>>;
+
 describe('App', () => {
-    let component: Awaited<ReturnType<typeof mountSuspended<typeof App>>>;
+    let component: MountedApp;
 
     beforeEach(async (): Promise<void> => {
         component = await mountSuspended(App);
