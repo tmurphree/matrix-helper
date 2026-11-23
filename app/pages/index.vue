@@ -16,12 +16,22 @@
                     <input class="ms-2" type="number" id="row-count" v-model.number="matrixRowLength" />
                     <br />
                     <label class="form-label fw-semibold" for="column-count">Column count:</label>
-                    <input class="ms-2" type="number" id="column-count" v-model.number="matrixColumnLength" @change="changeColumnCount" />
+                    <input
+                        class="ms-2"
+                        type="number"
+                        id="column-count"
+                        v-model.number="matrixColumnLength"
+                        @change="changeColumnCount"
+                    />
                 </div>
                 <div class="mb-3">
                     <label class="form-label fw-semibold" for="matrix-data"> Matrix data </label>
                     <div id="matrix-data" class="d-flex flex-column gap-2">
-                        <div v-for="row in roundToGreaterThanZero(matrixRowLength)" :key="row" class="row g-2 align-items-center">
+                        <div
+                            v-for="row in roundToGreaterThanZero(matrixRowLength)"
+                            :key="row"
+                            class="row g-2 align-items-center"
+                        >
                             <div class="col-auto text-body-secondary small">Row {{ row }}</div>
                             <div class="col">
                                 <EditableMatrixRow
@@ -61,10 +71,7 @@
         <div class="mt-4">
             <button type="button" class="btn btn-danger" @click="startOver">Start over</button>
         </div>
-        <ContentModal
-            v-model:open="showWarningModal.open"
-            :content="showWarningModal.content"
-        />
+        <ContentModal v-model:open="showWarningModal.open" :content="showWarningModal.content" />
     </div>
 </template>
 
@@ -93,9 +100,7 @@
 
     const { history, isLocalStorageEnabled, recordSteps, resetHistory, startHistory } = useMatrixHistory();
 
-    const isRectangularMatrix = computed(
-        (): boolean => matrixColumnLength.value !== matrixRowLength.value
-    );
+    const isRectangularMatrix = computed((): boolean => matrixColumnLength.value !== matrixRowLength.value);
 
     const addIdentityMatrixTooltipHost = ref<HTMLElement | null>(null);
 
@@ -112,7 +117,7 @@
 
         const { Tooltip: BootstrapTooltip } = await import('bootstrap');
         addIdentityMatrixTooltip = new BootstrapTooltip(host, {
-            title: 'Can\'t add an identity matrix to a rectangular matrix.',
+            title: "Can't add an identity matrix to a rectangular matrix.",
         });
     };
 

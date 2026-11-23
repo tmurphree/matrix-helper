@@ -13,11 +13,10 @@ export const useMatrixData = async () => {
     const addIdentityMatrix = (): void => {
         if (matrixColumnLength.value !== matrixRowLength.value) {
             showWarningModal.open = true;
-            showWarningModal.content = 'Can\'t add an identity matrix to a rectangular matrix.';
+            showWarningModal.content = "Can't add an identity matrix to a rectangular matrix.";
 
             return;
         }
-
 
         for (const [currentMatrixKey, currentMatrixValue] of matrix.value.entries()) {
             // Every matrix row is written as an array, so an undefined row cannot occur through this composable.
@@ -26,7 +25,8 @@ export const useMatrixData = async () => {
                 continue;
             }
 
-            const rowFillingFunction = (_element: unknown, index: number): number => (index === currentMatrixKey - 1 ? 1 : 0);
+            const rowFillingFunction = (_element: unknown, index: number): number =>
+                index === currentMatrixKey - 1 ? 1 : 0;
             const arrayToAppend = Array.from({ length: matrixColumnLength.value }, rowFillingFunction);
 
             matrix.value.set(currentMatrixKey, matrix.value.get(currentMatrixKey).concat(arrayToAppend));

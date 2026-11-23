@@ -172,9 +172,7 @@ describe('useMatrixData', () => {
             matrixApi.addIdentityMatrix();
 
             expect(matrixApi.showWarningModal.open).toBe(true);
-            expect(matrixApi.showWarningModal.content).toBe(
-                'Can\'t add an identity matrix to a rectangular matrix.'
-            );
+            expect(matrixApi.showWarningModal.content).toBe("Can't add an identity matrix to a rectangular matrix.");
             expect(matrixApi.matrix.value).toEqual(
                 new Map([
                     [1, [0, 0]],
