@@ -70,6 +70,9 @@ Match the import path the bundler resolves (often a relative path from the spec 
 - Use `vi.spyOn` when you need to observe a real implementation and optionally restore it.
 - Use `vi.stubGlobal` for `confirm`, `localStorage`, and other globals only when the real dependency runs; pair with `vi.unstubAllGlobals()` in `afterEach`.
 
+# Testing focus
+Prefer testing exported functions, composables, and emits/wiring; avoid asserting markup or styles unless that’s the behavior under test. Reserve full browser flows for E2E tests.  Never use Vitest as an E2E testing framework.
+
 # Test directness
 Use the **most direct** trigger that still matches what the test claims to prove:
 - **Pure functions / utilities**: call the exported function directly with inputs; no mount.

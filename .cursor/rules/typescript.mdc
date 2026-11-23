@@ -1,0 +1,11 @@
+---
+description: TypeScript conventions for this repo
+globs: "**/*.{ts,tsx}"
+alwaysApply: false
+---
+
+# When to make a type alias
+Use a type alias when the type uses the '<' character three or more times.
+```ts
+type MountedMatrixRow = Awaited<ReturnType<typeof mountSuspended<typeof EditableMatrixRow>>>;
+```
