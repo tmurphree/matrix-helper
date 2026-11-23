@@ -83,14 +83,12 @@ export const useMatrixData = async () => {
     };
 
     const resetMatrix = (): void => {
-        for (const key of matrix.value.keys()) {
-            const currentValue = matrix.value.get(key);
-
-            matrix.value.set(key, currentValue.fill(0));
-        }
-
         matrixColumnLength.value = 2;
         matrixRowLength.value = 2;
+        matrix.value = new Map([
+            [1, [0, 0]],
+            [2, [0, 0]],
+        ]);
     };
 
     const setMatrixData = ({ row, column, value }: { row: number; column: number; value: number }): void => {

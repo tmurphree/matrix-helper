@@ -239,5 +239,23 @@ describe('useMatrixData', () => {
             expect(matrixApi.matrixColumnLength.value).toBe(2);
             expect(matrixApi.matrixRowLength.value).toBe(2);
         });
+
+        it('restores a 2 by 2 matrix after the shape changes', () => {
+            matrixApi.matrixColumnLength.value = 4;
+            matrixApi.changeColumnCount();
+            matrixApi.matrixRowLength.value = 3;
+            matrixApi.changeRowCount();
+
+            matrixApi.resetMatrix();
+
+            expect(matrixApi.matrix.value).toEqual(
+                new Map([
+                    [1, [0, 0]],
+                    [2, [0, 0]],
+                ])
+            );
+            expect(matrixApi.matrixColumnLength.value).toBe(2);
+            expect(matrixApi.matrixRowLength.value).toBe(2);
+        });
     });
 });

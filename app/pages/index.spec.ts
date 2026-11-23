@@ -213,6 +213,22 @@ describe('Index', () => {
         });
     });
 
+    describe('startOver after a wider matrix', () => {
+        it('returns to two columns when the user answers yes', async () => {
+            await setColumnCount({ component, columnCount: 4 });
+            await clickStartTransformations(component);
+            await findButton({ component, text: 'Start over' }).trigger('click');
+            await component.findComponent(ConfirmModal).vm.$emit('answer', true);
+            await flushPromises();
+
+            expect(getEditableRowData(component)).toEqual([
+                [0, 0],
+                [0, 0],
+            ]);
+            expect((component.find('#column-count').element as HTMLInputElement).value).toBe('2');
+        });
+    });
+
     describe('matrix size inputs', () => {
         it('adds a matrix row when the row count changes', async () => {
             await component.find('#row-count').setValue('3');
