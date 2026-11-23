@@ -72,17 +72,13 @@
                                 <RowSelector
                                     v-model:selected-row="addOperationRowToReplace"
                                     :matrix-row-length="matrixRowLength"
+                                    :valid="!hasInvalidAddReplaceRow"
                                 />
                             </span>
                         </label>
                     </li>
                 </ul>
-                <button
-                    type="button"
-                    class="btn btn-primary"
-                    :disabled="selectedOperationType === 'add' && hasDuplicateAddSourceRows"
-                    @click="applyTransformation"
-                >
+                <button type="button" class="btn btn-primary" :disabled="isApplyDisabled" @click="applyTransformation">
                     Apply transformation
                 </button>
             </div>
@@ -116,10 +112,20 @@
 
     const hasDuplicateAddSourceRows = computed((): boolean => addOperationRowId01.value === addOperationRowId02.value);
 
+    const hasInvalidAddReplaceRow = computed(
+        (): boolean =>
+            addOperationRowToReplace.value !== addOperationRowId01.value &&
+            addOperationRowToReplace.value !== addOperationRowId02.value
+    );
+
+    const isApplyDisabled = computed((): boolean => {
+        return selectedOperationType.value === 'add' && (hasDuplicateAddSourceRows.value || hasInvalidAddReplaceRow.value);
+    });
+
     const matrixRowLength = computed(() => matrix.value.size);
 
     const applyTransformation = (): void => {
-        if (selectedOperationType.value === 'add' && hasDuplicateAddSourceRows.value) {
+        if (isApplyDisabled.value) {
             return;
         }
 
