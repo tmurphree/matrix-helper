@@ -156,7 +156,10 @@ describe('EditingForm', () => {
             await component.findAll('input')[ADD_RADIO_INPUT_INDEX]!.setValue(true);
             await selectRow({ component, selectorIndex: ADD_REPLACE_ROW_SELECTOR_INDEX, row: 3 });
 
-            await clickApplyTransformation(component);
+            const applyButton = component.find('button');
+            // trigger() skips a disabled control, so the click handler never runs.
+            applyButton.element.removeAttribute('disabled');
+            await applyButton.trigger('click');
 
             expect(applyMatrixTransformationMock).not.toHaveBeenCalled();
             expect(component.emitted('update:matrix')).toBeUndefined();
