@@ -46,13 +46,14 @@
                     <span
                         ref="addIdentityMatrixTooltipHost"
                         class="d-inline-block"
-                        :tabindex="isRectangularMatrix ? 0 : undefined"
+                        :tabindex="isRectangularMatrix ? -1 : undefined"
                     >
                         <button
                             :disabled="isRectangularMatrix"
                             type="button"
                             class="btn btn-primary"
                             @click="addIdentityMatrix"
+                            :tabindex="isRectangularMatrix ? -1 : undefined"
                         >
                             Add identity matrix
                         </button>
@@ -61,7 +62,7 @@
                 <button
                     :disabled="showWarningModal.open"
                     type="button"
-                    class="btn btn-primary"
+                    class="btn btn-success"
                     @click="startTransformations"
                 >
                     Start transformations
@@ -69,7 +70,9 @@
             </div>
         </div>
         <div class="mt-4">
-            <button type="button" class="btn btn-danger" @click="startOver">Start over</button>
+            <button :disabled="!isMatrixInitialized" type="button" class="btn btn-danger" @click="startOver">
+                Start over
+            </button>
         </div>
         <ContentModal v-model:open="showWarningModal.open" :content="showWarningModal.content" />
         <ConfirmModal :open="confirmModal.open" :content="confirmModal.content" @answer="answerConfirmation" />

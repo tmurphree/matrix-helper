@@ -293,7 +293,7 @@ describe('Index', () => {
             expect(TooltipMock).toHaveBeenCalledWith(tooltipHost.element, {
                 title: "Can't add an identity matrix to a rectangular matrix.",
             });
-            expect(tooltipHost.attributes('tabindex')).toBe('0');
+            expect(tooltipHost.attributes('tabindex')).toBe('-1');
             expect(findButton({ component, text: 'Add identity matrix' }).attributes('disabled')).toBeDefined();
         });
 
