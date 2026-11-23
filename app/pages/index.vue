@@ -16,12 +16,22 @@
                     <input class="ms-2" type="number" id="row-count" v-model.number="matrixRowLength" />
                     <br />
                     <label class="form-label fw-semibold" for="column-count">Column count:</label>
-                    <input class="ms-2" type="number" id="column-count" v-model.number="matrixColumnLength" @change="changeColumnCount" />
+                    <input
+                        class="ms-2"
+                        type="number"
+                        id="column-count"
+                        v-model.number="matrixColumnLength"
+                        @change="changeColumnCount"
+                    />
                 </div>
                 <div class="mb-3">
                     <label class="form-label fw-semibold" for="matrix-data"> Matrix data </label>
                     <div id="matrix-data" class="d-flex flex-column gap-2">
-                        <div v-for="row in roundToGreaterThanZero(matrixRowLength)" :key="row" class="row g-2 align-items-center">
+                        <div
+                            v-for="row in roundToGreaterThanZero(matrixRowLength)"
+                            :key="row"
+                            class="row g-2 align-items-center"
+                        >
                             <div class="col-auto text-body-secondary small">Row {{ row }}</div>
                             <div class="col">
                                 <EditableMatrixRow
@@ -36,13 +46,14 @@
                     <span
                         ref="addIdentityMatrixTooltipHost"
                         class="d-inline-block"
-                        :tabindex="isRectangularMatrix ? 0 : undefined"
+                        :tabindex="isRectangularMatrix ? -1 : undefined"
                     >
                         <button
                             :disabled="isRectangularMatrix"
                             type="button"
                             class="btn btn-primary"
                             @click="addIdentityMatrix"
+                            :tabindex="isRectangularMatrix ? -1 : undefined"
                         >
                             Add identity matrix
                         </button>
@@ -51,7 +62,7 @@
                 <button
                     :disabled="showWarningModal.open"
                     type="button"
-                    class="btn btn-primary"
+                    class="btn btn-success"
                     @click="startTransformations"
                 >
                     Start transformations
@@ -59,12 +70,12 @@
             </div>
         </div>
         <div class="mt-4">
-            <button type="button" class="btn btn-danger" @click="startOver">Start over</button>
+            <button :disabled="!isMatrixInitialized" type="button" class="btn btn-danger" @click="startOver">
+                Start over
+            </button>
         </div>
-        <ContentModal
-            v-model:open="showWarningModal.open"
-            :content="showWarningModal.content"
-        />
+        <ContentModal v-model:open="showWarningModal.open" :content="showWarningModal.content" />
+        <ConfirmModal :open="confirmModal.open" :content="confirmModal.content" @answer="answerConfirmation" />
     </div>
 </template>
 
@@ -91,11 +102,11 @@
         setMatrixRow,
     } = await useMatrixData();
 
-    const { history, isLocalStorageEnabled, recordSteps, resetHistory, startHistory } = useMatrixHistory();
+    const { answerConfirmation, askConfirmation, confirmModal } = useConfirmModal();
 
-    const isRectangularMatrix = computed(
-        (): boolean => matrixColumnLength.value !== matrixRowLength.value
-    );
+    const { hasHistory, history, isLocalStorageEnabled, recordSteps, resetHistory, startHistory } = useMatrixHistory();
+
+    const isRectangularMatrix = computed((): boolean => matrixColumnLength.value !== matrixRowLength.value);
 
     const addIdentityMatrixTooltipHost = ref<HTMLElement | null>(null);
 
@@ -112,7 +123,7 @@
 
         const { Tooltip: BootstrapTooltip } = await import('bootstrap');
         addIdentityMatrixTooltip = new BootstrapTooltip(host, {
-            title: 'Can\'t add an identity matrix to a rectangular matrix.',
+            title: "Can't add an identity matrix to a rectangular matrix.",
         });
     };
 
@@ -124,6 +135,10 @@
 
     onMounted((): void => {
         void syncAddIdentityMatrixTooltip();
+        if (hasHistory.value) {
+            isMatrixInitialized.value = true;
+            matrix.value = history.value[history.value.length - 1];
+        }
     });
 
     onUnmounted((): void => {
@@ -143,8 +158,8 @@
         isMatrixInitialized.value = true;
     };
 
-    const startOver = (): void => {
-        const userAgreed = confirm('Are you sure?  This resets your matrix.');
+    const startOver = async (): Promise<void> => {
+        const userAgreed = await askConfirmation({ content: 'Are you sure?  This resets your matrix.' });
         if (userAgreed) {
             isMatrixInitialized.value = false;
             resetMatrix();

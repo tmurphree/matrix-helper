@@ -1,6 +1,7 @@
 node_modules
 .cursor
 .devcontainer
+.github
 .nuxt
 .output
 

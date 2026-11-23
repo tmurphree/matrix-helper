@@ -1,7 +1,7 @@
 import { mountSuspended } from '@nuxt/test-utils/runtime';
 import { flushPromises } from '@vue/test-utils';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { ref, type Ref } from 'vue';
+import { computed, ref, type Ref } from 'vue';
 
 const { recordStepsSpy, resetHistorySpy, startHistorySpy, tooltipDisposeSpy, TooltipMock, useMatrixHistoryMock } =
     vi.hoisted(() => {
@@ -27,6 +27,7 @@ vi.mock('bootstrap', () => ({
     Tooltip: TooltipMock,
 }));
 
+import ConfirmModal from '../components/confirm-modal.vue';
 import ContentModal from '../components/content-modal.vue';
 import EditableMatrixRow from '../components/editable-matrix-row.vue';
 import EditingForm from '../components/editing-form.vue';
@@ -77,6 +78,7 @@ describe('Index', () => {
         isLocalStorageEnabled = ref(false);
 
         useMatrixHistoryMock.mockImplementation(() => ({
+            hasHistory: computed((): boolean => history.value.length > 0),
             history,
             isLocalStorageEnabled,
             recordSteps: recordStepsSpy,
@@ -91,6 +93,31 @@ describe('Index', () => {
         vi.clearAllMocks();
         vi.unstubAllGlobals();
         component.unmount();
+    });
+
+    describe('onMounted', () => {
+        it('sets the matrix to the last step when there is history', async () => {
+            const lastStep = new Map<number, number[]>([
+                [1, [0, 0]],
+                [2, [0, 0]],
+            ]);
+
+            history.value = [lastStep];
+            component.unmount();
+            component = await mountSuspended(Index);
+
+            expect(component.findComponent(EditingForm).props('matrix')).toEqual(lastStep);
+        });
+    });
+
+    describe('onUnmounted', () => {
+        it('disposes the tooltip if it is truthy', async () => {
+            await setColumnCount({ component, columnCount: 3 });
+
+            await component.unmount();
+
+            expect(tooltipDisposeSpy).toHaveBeenCalledTimes(1);
+        });
     });
 
     describe('onTransformationApplied', () => {
@@ -152,16 +179,21 @@ describe('Index', () => {
             await clickStartTransformations(component);
         });
 
-        it('resets the matrix and history and returns to data entry when the user confirms', async () => {
-            vi.stubGlobal(
-                'confirm',
-                vi.fn(() => true)
-            );
-
+        it('opens the confirm modal without clearing anything until the user answers', async () => {
             await findButton({ component, text: 'Start over' }).trigger('click');
 
-            expect(confirm).toHaveBeenCalledTimes(1);
-            expect(confirm).toHaveBeenCalledWith('Are you sure?  This resets your matrix.');
+            expect(component.findComponent(ConfirmModal).props('open')).toBe(true);
+            expect(component.findComponent(ConfirmModal).props('content')).toBe('Are you sure?  This resets your matrix.');
+            expect(resetHistorySpy).not.toHaveBeenCalled();
+            expect(component.find('[data-name="add-transformations"]').exists()).toBe(true);
+        });
+
+        it('resets the matrix and history and returns to data entry when the user answers yes', async () => {
+            await findButton({ component, text: 'Start over' }).trigger('click');
+            await component.findComponent(ConfirmModal).vm.$emit('answer', true);
+            await flushPromises();
+
+            expect(component.findComponent(ConfirmModal).props('open')).toBe(false);
             expect(resetHistorySpy).toHaveBeenCalledTimes(1);
             expect(component.find('[data-name="initial-data-entry"]').exists()).toBe(true);
             expect(getEditableRowData(component)).toEqual([
@@ -170,17 +202,30 @@ describe('Index', () => {
             ]);
         });
 
-        it('keeps the transformations view when the user declines', async () => {
-            vi.stubGlobal(
-                'confirm',
-                vi.fn(() => false)
-            );
-
+        it('keeps the transformations view when the user answers no', async () => {
             await findButton({ component, text: 'Start over' }).trigger('click');
+            await component.findComponent(ConfirmModal).vm.$emit('answer', false);
+            await flushPromises();
 
-            expect(confirm).toHaveBeenCalledTimes(1);
+            expect(component.findComponent(ConfirmModal).props('open')).toBe(false);
             expect(resetHistorySpy).not.toHaveBeenCalled();
             expect(component.find('[data-name="add-transformations"]').exists()).toBe(true);
+        });
+    });
+
+    describe('startOver after a wider matrix', () => {
+        it('returns to two columns when the user answers yes', async () => {
+            await setColumnCount({ component, columnCount: 4 });
+            await clickStartTransformations(component);
+            await findButton({ component, text: 'Start over' }).trigger('click');
+            await component.findComponent(ConfirmModal).vm.$emit('answer', true);
+            await flushPromises();
+
+            expect(getEditableRowData(component)).toEqual([
+                [0, 0],
+                [0, 0],
+            ]);
+            expect((component.find('#column-count').element as HTMLInputElement).value).toBe('2');
         });
     });
 
@@ -264,7 +309,7 @@ describe('Index', () => {
             expect(TooltipMock).toHaveBeenCalledWith(tooltipHost.element, {
                 title: "Can't add an identity matrix to a rectangular matrix.",
             });
-            expect(tooltipHost.attributes('tabindex')).toBe('0');
+            expect(tooltipHost.attributes('tabindex')).toBe('-1');
             expect(findButton({ component, text: 'Add identity matrix' }).attributes('disabled')).toBeDefined();
         });
 

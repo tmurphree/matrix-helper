@@ -10,9 +10,5 @@ export default {
     trailingComma: 'es5',
     useTabs: false,
     vueIndentScriptAndStyle: true,
-    ignorePatterns: [
-        'dist/**/*',
-        'documents/**/*',
-        'node_modules/**/*',
-    ]
+    ignorePatterns: ['dist/**/*', 'documents/**/*', 'node_modules/**/*'],
 };

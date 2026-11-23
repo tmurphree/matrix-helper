@@ -94,16 +94,13 @@ describe('ContentModal', () => {
             ({ open, wrapper } = await mountOpenModal());
         });
 
-        it.each(['Escape', 'Enter', 'NumpadEnter'])(
-            'sets open to false when %s is pressed',
-            async (key): Promise<void> => {
-                const event = dispatchDismissKey(key);
-                await flushPromises();
+        it.each(['Escape', 'Enter', 'NumpadEnter'])('sets open to false when %s is pressed', async (key): Promise<void> => {
+            const event = dispatchDismissKey(key);
+            await flushPromises();
 
-                expect(event.defaultPrevented).toBe(true);
-                expect(open.value).toBe(false);
-            }
-        );
+            expect(event.defaultPrevented).toBe(true);
+            expect(open.value).toBe(false);
+        });
 
         it('ignores other keys while open', async (): Promise<void> => {
             const onWindowKeyDown = getWindowKeyDownCaptureListener();

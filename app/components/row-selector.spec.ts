@@ -33,4 +33,16 @@ describe('RowSelector', () => {
             expect(component.emitted('update:selectedRow')).toEqual([[3]]);
         });
     });
+
+    describe('valid', () => {
+        it('does not mark the select invalid by default', () => {
+            expect(component.find('select').classes()).not.toContain('is-invalid');
+        });
+
+        it('marks the select invalid when valid is false', async () => {
+            await component.setProps({ valid: false });
+
+            expect(component.find('select').classes()).toContain('is-invalid');
+        });
+    });
 });

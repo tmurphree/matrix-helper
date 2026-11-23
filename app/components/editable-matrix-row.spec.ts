@@ -40,5 +40,33 @@ describe('EditableMatrixRow', () => {
 
             expect(rowData).toEqual([1, 2, 3]);
         });
+
+        it('emits update:rowData when the edited cell is negative', async () => {
+            await component.findAll('input')[0]!.setValue('-5');
+
+            expect(component.emitted('update:rowData')).toEqual([[[-5, 2, 3]]]);
+        });
+
+        it('does not replace an unfinished minus sign with 0', async () => {
+            const input = component.findAll('input')[0]!;
+            const element = input.element as HTMLInputElement;
+
+            Object.defineProperty(element, 'validity', {
+                configurable: true,
+                value: { badInput: true },
+            });
+            element.value = '';
+
+            await input.trigger('input');
+
+            expect(component.emitted('update:rowData')).toBeUndefined();
+            expect(element.value).not.toBe('0');
+        });
+
+        it('emits 0 when the cell is cleared', async () => {
+            await component.findAll('input')[0]!.setValue('');
+
+            expect(component.emitted('update:rowData')).toEqual([[[0, 2, 3]]]);
+        });
     });
 });

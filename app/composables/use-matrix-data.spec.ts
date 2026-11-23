@@ -172,9 +172,7 @@ describe('useMatrixData', () => {
             matrixApi.addIdentityMatrix();
 
             expect(matrixApi.showWarningModal.open).toBe(true);
-            expect(matrixApi.showWarningModal.content).toBe(
-                'Can\'t add an identity matrix to a rectangular matrix.'
-            );
+            expect(matrixApi.showWarningModal.content).toBe("Can't add an identity matrix to a rectangular matrix.");
             expect(matrixApi.matrix.value).toEqual(
                 new Map([
                     [1, [0, 0]],
@@ -233,6 +231,31 @@ describe('useMatrixData', () => {
             matrixApi.resetMatrix();
             expect([...matrixApi.matrix.value.keys()]).toEqual([1, 2]);
             expect(matrixApi.matrix.value.size).toBe(2);
+        });
+
+        it('resets the column and row counts', () => {
+            matrixApi.setMatrixData({ row: 1, column: 1, value: 9 });
+            matrixApi.resetMatrix();
+            expect(matrixApi.matrixColumnLength.value).toBe(2);
+            expect(matrixApi.matrixRowLength.value).toBe(2);
+        });
+
+        it('restores a 2 by 2 matrix after the shape changes', () => {
+            matrixApi.matrixColumnLength.value = 4;
+            matrixApi.changeColumnCount();
+            matrixApi.matrixRowLength.value = 3;
+            matrixApi.changeRowCount();
+
+            matrixApi.resetMatrix();
+
+            expect(matrixApi.matrix.value).toEqual(
+                new Map([
+                    [1, [0, 0]],
+                    [2, [0, 0]],
+                ])
+            );
+            expect(matrixApi.matrixColumnLength.value).toBe(2);
+            expect(matrixApi.matrixRowLength.value).toBe(2);
         });
     });
 });

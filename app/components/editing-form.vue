@@ -4,9 +4,9 @@
             <h2 class="h4 card-title">Transformations</h2>
             <div class="mb-4">
                 <h3 class="h6 text-uppercase text-body-secondary">Current matrix</h3>
-                <pre class="bg-body-secondary bg-opacity-10 border rounded p-3 mb-0 font-monospace small">
-                    {{ formatCurrentMatrix() }}
-                </pre>
+                <pre class="bg-body-secondary bg-opacity-10 border rounded p-3 mb-0 font-monospace small">{{
+                    formatCurrentMatrix()
+                }}</pre>
             </div>
             <div>
                 <h3 class="h6 text-uppercase text-body-secondary">Next operation (placeholder)</h3>
@@ -66,17 +66,21 @@
                                 <RowSelector
                                     v-model:selected-row="addOperationRowId02"
                                     :matrix-row-length="matrixRowLength"
+                                    :valid="!hasDuplicateAddSourceRows"
                                 />
                                 and replace
                                 <RowSelector
                                     v-model:selected-row="addOperationRowToReplace"
                                     :matrix-row-length="matrixRowLength"
+                                    :valid="!hasInvalidAddReplaceRow"
                                 />
                             </span>
                         </label>
                     </li>
                 </ul>
-                <button type="button" class="btn btn-primary" @click="applyTransformation">Apply transformation</button>
+                <button type="button" class="btn btn-primary" :disabled="isApplyDisabled" @click="applyTransformation">
+                    Apply transformation
+                </button>
             </div>
         </div>
     </section>
@@ -106,9 +110,25 @@
     const multiplyOperationValue = ref(1);
     const selectedOperationType = ref<OperationType>('multiply');
 
+    const hasDuplicateAddSourceRows = computed((): boolean => addOperationRowId01.value === addOperationRowId02.value);
+
+    const hasInvalidAddReplaceRow = computed(
+        (): boolean =>
+            addOperationRowToReplace.value !== addOperationRowId01.value &&
+            addOperationRowToReplace.value !== addOperationRowId02.value
+    );
+
+    const isApplyDisabled = computed((): boolean => {
+        return selectedOperationType.value === 'add' && (hasDuplicateAddSourceRows.value || hasInvalidAddReplaceRow.value);
+    });
+
     const matrixRowLength = computed(() => matrix.value.size);
 
     const applyTransformation = (): void => {
+        if (isApplyDisabled.value) {
+            return;
+        }
+
         const result = applyMatrixTransformation({
             matrix: matrix.value,
             transformation: buildTransformation(),

@@ -73,7 +73,7 @@ describe('EditingForm', () => {
 
     describe('formatCurrentMatrix', () => {
         it('shows the matrix formatted as tab-separated rows', () => {
-            expect(component.find('pre').element.textContent?.trim()).toBe('1\t2\n3\t4\n5\t6');
+            expect(component.find('pre').element.textContent).toBe('1\t2\n3\t4\n5\t6');
         });
 
         it('updates the display when the matrix prop changes', async () => {
@@ -81,7 +81,7 @@ describe('EditingForm', () => {
 
             await component.setProps({ matrix: nextMatrix });
 
-            expect(component.find('pre').element.textContent?.trim()).toBe('9\t8');
+            expect(component.find('pre').element.textContent).toBe('9\t8');
         });
     });
 
@@ -107,7 +107,7 @@ describe('EditingForm', () => {
             await inputs[ADD_SECOND_VALUE_INPUT_INDEX]!.setValue('-1');
             await selectRow({ component, selectorIndex: ADD_FIRST_ROW_SELECTOR_INDEX, row: 3 });
             await selectRow({ component, selectorIndex: ADD_SECOND_ROW_SELECTOR_INDEX, row: 1 });
-            await selectRow({ component, selectorIndex: ADD_REPLACE_ROW_SELECTOR_INDEX, row: 2 });
+            await selectRow({ component, selectorIndex: ADD_REPLACE_ROW_SELECTOR_INDEX, row: 3 });
 
             await clickApplyTransformation(component);
 
@@ -120,7 +120,7 @@ describe('EditingForm', () => {
                     rowId01: 3,
                     coefficient02: -1,
                     rowId02: 1,
-                    rowIdToReplace: 2,
+                    rowIdToReplace: 3,
                 },
             });
         });
@@ -150,6 +150,88 @@ describe('EditingForm', () => {
             await clickApplyTransformation(component);
 
             expect(component.emitted('transformation-applied')).toEqual([[resultSteps]]);
+        });
+
+        it('returns without applying when Apply is disabled', async () => {
+            await component.findAll('input')[ADD_RADIO_INPUT_INDEX]!.setValue(true);
+            await selectRow({ component, selectorIndex: ADD_REPLACE_ROW_SELECTOR_INDEX, row: 3 });
+
+            const applyButton = component.find('button');
+            // trigger() skips a disabled control, so the click handler never runs.
+            applyButton.element.removeAttribute('disabled');
+            await applyButton.trigger('click');
+
+            expect(applyMatrixTransformationMock).not.toHaveBeenCalled();
+            expect(component.emitted('update:matrix')).toBeUndefined();
+            expect(component.emitted('transformation-applied')).toBeUndefined();
+        });
+    });
+
+    describe('duplicate add source rows', () => {
+        const secondSourceSelect = (): ReturnType<MountedEditingForm['find']> => {
+            return component.findAllComponents(RowSelector)[ADD_SECOND_ROW_SELECTOR_INDEX]!.find('select');
+        };
+
+        it('disables Apply and marks the second source row invalid when both source rows match', async () => {
+            await component.findAll('input')[ADD_RADIO_INPUT_INDEX]!.setValue(true);
+            await selectRow({ component, selectorIndex: ADD_SECOND_ROW_SELECTOR_INDEX, row: 1 });
+
+            expect(component.find('button').attributes('disabled')).toBeDefined();
+            expect(secondSourceSelect().classes()).toContain('is-invalid');
+
+            await clickApplyTransformation(component);
+
+            expect(applyMatrixTransformationMock).not.toHaveBeenCalled();
+        });
+
+        it('enables Apply and clears the invalid state when the second source row differs', async () => {
+            await component.findAll('input')[ADD_RADIO_INPUT_INDEX]!.setValue(true);
+            await selectRow({ component, selectorIndex: ADD_SECOND_ROW_SELECTOR_INDEX, row: 1 });
+            await selectRow({ component, selectorIndex: ADD_SECOND_ROW_SELECTOR_INDEX, row: 2 });
+
+            expect(component.find('button').attributes('disabled')).toBeUndefined();
+            expect(secondSourceSelect().classes()).not.toContain('is-invalid');
+        });
+
+        it('keeps Apply enabled for multiply when the add source rows match', async () => {
+            await selectRow({ component, selectorIndex: ADD_SECOND_ROW_SELECTOR_INDEX, row: 1 });
+
+            expect(component.find('button').attributes('disabled')).toBeUndefined();
+            expect(secondSourceSelect().classes()).toContain('is-invalid');
+        });
+    });
+
+    describe('add replace row outside the source rows', () => {
+        const replaceSelect = (): ReturnType<MountedEditingForm['find']> => {
+            return component.findAllComponents(RowSelector)[ADD_REPLACE_ROW_SELECTOR_INDEX]!.find('select');
+        };
+
+        it('disables Apply and marks the replace row invalid when it is not a source row', async () => {
+            await component.findAll('input')[ADD_RADIO_INPUT_INDEX]!.setValue(true);
+            await selectRow({ component, selectorIndex: ADD_REPLACE_ROW_SELECTOR_INDEX, row: 3 });
+
+            expect(component.find('button').attributes('disabled')).toBeDefined();
+            expect(replaceSelect().classes()).toContain('is-invalid');
+
+            await clickApplyTransformation(component);
+
+            expect(applyMatrixTransformationMock).not.toHaveBeenCalled();
+        });
+
+        it('enables Apply and clears the invalid state when the replace row is a source row', async () => {
+            await component.findAll('input')[ADD_RADIO_INPUT_INDEX]!.setValue(true);
+            await selectRow({ component, selectorIndex: ADD_REPLACE_ROW_SELECTOR_INDEX, row: 3 });
+            await selectRow({ component, selectorIndex: ADD_REPLACE_ROW_SELECTOR_INDEX, row: 1 });
+
+            expect(component.find('button').attributes('disabled')).toBeUndefined();
+            expect(replaceSelect().classes()).not.toContain('is-invalid');
+        });
+
+        it('keeps Apply enabled for multiply when the replace row is not a source row', async () => {
+            await selectRow({ component, selectorIndex: ADD_REPLACE_ROW_SELECTOR_INDEX, row: 3 });
+
+            expect(component.find('button').attributes('disabled')).toBeUndefined();
+            expect(replaceSelect().classes()).toContain('is-invalid');
         });
     });
 });
