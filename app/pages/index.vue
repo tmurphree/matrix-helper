@@ -72,6 +72,7 @@
             <button type="button" class="btn btn-danger" @click="startOver">Start over</button>
         </div>
         <ContentModal v-model:open="showWarningModal.open" :content="showWarningModal.content" />
+        <ConfirmModal :open="confirmModal.open" :content="confirmModal.content" @answer="answerConfirmation" />
     </div>
 </template>
 
@@ -97,6 +98,8 @@
         roundToGreaterThanZero,
         setMatrixRow,
     } = await useMatrixData();
+
+    const { answerConfirmation, askConfirmation, confirmModal } = useConfirmModal();
 
     const { hasHistory, history, isLocalStorageEnabled, recordSteps, resetHistory, startHistory } = useMatrixHistory();
 
@@ -152,8 +155,8 @@
         isMatrixInitialized.value = true;
     };
 
-    const startOver = (): void => {
-        const userAgreed = confirm('Are you sure?  This resets your matrix.');
+    const startOver = async (): Promise<void> => {
+        const userAgreed = await askConfirmation({ content: 'Are you sure?  This resets your matrix.' });
         if (userAgreed) {
             isMatrixInitialized.value = false;
             resetMatrix();
