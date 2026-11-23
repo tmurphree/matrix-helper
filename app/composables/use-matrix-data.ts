@@ -88,6 +88,9 @@ export const useMatrixData = async () => {
 
             matrix.value.set(key, currentValue.fill(0));
         }
+
+        matrixColumnLength.value = 2;
+        matrixRowLength.value = 2;
     };
 
     const setMatrixData = ({ row, column, value }: { row: number; column: number; value: number }): void => {

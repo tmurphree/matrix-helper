@@ -232,5 +232,12 @@ describe('useMatrixData', () => {
             expect([...matrixApi.matrix.value.keys()]).toEqual([1, 2]);
             expect(matrixApi.matrix.value.size).toBe(2);
         });
+
+        it('resets the column and row counts', () => {
+            matrixApi.setMatrixData({ row: 1, column: 1, value: 9 });
+            matrixApi.resetMatrix();
+            expect(matrixApi.matrixColumnLength.value).toBe(2);
+            expect(matrixApi.matrixRowLength.value).toBe(2);
+        });
     });
 });
