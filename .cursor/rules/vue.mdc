@@ -5,6 +5,21 @@ applyTo: **/*.vue
 
 # Script rules
 - Use `<script setup lang="ts">` unless there is a specific reason to use something else.
+- Declare the props type and the defaults object in a plain `<script lang="ts">` block. Call `withDefaults(defineProps<Props>(), defaults)` in `<script setup>`. `defineProps` is hoisted and cannot read variables declared in `<script setup>`.
+```vue
+<script lang="ts">
+    interface Props {
+        matrixRowLength: number;
+        valid?: boolean;
+    }
+
+    const defaults: Partial<Props> = { valid: true };
+</script>
+
+<script setup lang="ts">
+    const props = withDefaults(defineProps<Props>(), defaults);
+</script>
+```
 - Never use these as variable names:
     - model
 - Never use defineModel without naming a semantic prop.
@@ -30,4 +45,4 @@ applyTo: **/*.vue
     const golf = () => null;
 ```
 
-- Organize the file in this order: <template>, <script>, <style>.  Use the appropriate version of the 'script' element as discussed above.
+- Organize the file in this order: <template>, <script>, <script setup>, <style>.

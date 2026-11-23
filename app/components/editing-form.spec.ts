@@ -152,4 +152,38 @@ describe('EditingForm', () => {
             expect(component.emitted('transformation-applied')).toEqual([[resultSteps]]);
         });
     });
+
+    describe('duplicate add source rows', () => {
+        const secondSourceSelect = (): ReturnType<MountedEditingForm['find']> => {
+            return component.findAllComponents(RowSelector)[ADD_SECOND_ROW_SELECTOR_INDEX]!.find('select');
+        };
+
+        it('disables Apply and marks the second source row invalid when both source rows match', async () => {
+            await component.findAll('input')[ADD_RADIO_INPUT_INDEX]!.setValue(true);
+            await selectRow({ component, selectorIndex: ADD_SECOND_ROW_SELECTOR_INDEX, row: 1 });
+
+            expect(component.find('button').attributes('disabled')).toBeDefined();
+            expect(secondSourceSelect().classes()).toContain('is-invalid');
+
+            await clickApplyTransformation(component);
+
+            expect(applyMatrixTransformationMock).not.toHaveBeenCalled();
+        });
+
+        it('enables Apply and clears the invalid state when the second source row differs', async () => {
+            await component.findAll('input')[ADD_RADIO_INPUT_INDEX]!.setValue(true);
+            await selectRow({ component, selectorIndex: ADD_SECOND_ROW_SELECTOR_INDEX, row: 1 });
+            await selectRow({ component, selectorIndex: ADD_SECOND_ROW_SELECTOR_INDEX, row: 2 });
+
+            expect(component.find('button').attributes('disabled')).toBeUndefined();
+            expect(secondSourceSelect().classes()).not.toContain('is-invalid');
+        });
+
+        it('keeps Apply enabled for multiply when the add source rows match', async () => {
+            await selectRow({ component, selectorIndex: ADD_SECOND_ROW_SELECTOR_INDEX, row: 1 });
+
+            expect(component.find('button').attributes('disabled')).toBeUndefined();
+            expect(secondSourceSelect().classes()).toContain('is-invalid');
+        });
+    });
 });

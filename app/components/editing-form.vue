@@ -66,6 +66,7 @@
                                 <RowSelector
                                     v-model:selected-row="addOperationRowId02"
                                     :matrix-row-length="matrixRowLength"
+                                    :valid="!hasDuplicateAddSourceRows"
                                 />
                                 and replace
                                 <RowSelector
@@ -76,7 +77,14 @@
                         </label>
                     </li>
                 </ul>
-                <button type="button" class="btn btn-primary" @click="applyTransformation">Apply transformation</button>
+                <button
+                    type="button"
+                    class="btn btn-primary"
+                    :disabled="selectedOperationType === 'add' && hasDuplicateAddSourceRows"
+                    @click="applyTransformation"
+                >
+                    Apply transformation
+                </button>
             </div>
         </div>
     </section>
@@ -106,9 +114,15 @@
     const multiplyOperationValue = ref(1);
     const selectedOperationType = ref<OperationType>('multiply');
 
+    const hasDuplicateAddSourceRows = computed((): boolean => addOperationRowId01.value === addOperationRowId02.value);
+
     const matrixRowLength = computed(() => matrix.value.size);
 
     const applyTransformation = (): void => {
+        if (selectedOperationType.value === 'add' && hasDuplicateAddSourceRows.value) {
+            return;
+        }
+
         const result = applyMatrixTransformation({
             matrix: matrix.value,
             transformation: buildTransformation(),
