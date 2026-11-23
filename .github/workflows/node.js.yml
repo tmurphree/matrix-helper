@@ -5,11 +5,11 @@ on:
 permissions:
     contents: read
 jobs:
-    unit-tests:
-        uses: ./.github/workflows/run-node-command.yml
-        with:
-            command: npm run build && npm run test:coverage
     linting:
         uses: ./.github/workflows/run-node-command.yml
         with:
             command: npm run check
+    unit-tests:
+        uses: ./.github/workflows/run-node-command.yml
+        with:
+            command: npm run build && npm run test:coverage
