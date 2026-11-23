@@ -1,7 +1,7 @@
 import { mountSuspended } from '@nuxt/test-utils/runtime';
 import { flushPromises } from '@vue/test-utils';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { ref, type Ref } from 'vue';
+import { computed, ref, type Ref } from 'vue';
 
 const { recordStepsSpy, resetHistorySpy, startHistorySpy, tooltipDisposeSpy, TooltipMock, useMatrixHistoryMock } =
     vi.hoisted(() => {
@@ -77,6 +77,7 @@ describe('Index', () => {
         isLocalStorageEnabled = ref(false);
 
         useMatrixHistoryMock.mockImplementation(() => ({
+            hasHistory: computed((): boolean => history.value.length > 0),
             history,
             isLocalStorageEnabled,
             recordSteps: recordStepsSpy,
@@ -91,6 +92,31 @@ describe('Index', () => {
         vi.clearAllMocks();
         vi.unstubAllGlobals();
         component.unmount();
+    });
+
+    describe('onMounted', () => {
+        it('sets the matrix to the last step when there is history', async () => {
+            const lastStep = new Map<number, number[]>([
+                [1, [0, 0]],
+                [2, [0, 0]],
+            ]);
+
+            history.value = [lastStep];
+            component.unmount();
+            component = await mountSuspended(Index);
+
+            expect(component.findComponent(EditingForm).props('matrix')).toEqual(lastStep);
+        });
+    });
+
+    describe('onUnmounted', () => {
+        it('disposes the tooltip if it is truthy', async () => {
+            await setColumnCount({ component, columnCount: 3 });
+
+            await component.unmount();
+
+            expect(tooltipDisposeSpy).toHaveBeenCalledTimes(1);
+        });
     });
 
     describe('onTransformationApplied', () => {
