@@ -4,8 +4,30 @@ applyTo: **/*.vue
 ---
 
 # Script rules
+- Use `<script setup lang="ts">` unless there is a specific reason to use something else.
 - Never use these as variable names:
     - model
 - Never use defineModel without naming a semantic prop.
     - Bad: const selectedRow = defineModel<number>({ required: true });
     - Good: const rowId = defineModel<number>('rowId', { required: true });
+- Organize the code in this order.  Each section should be ordered alphabetically unless there is a specific reason to not do so.
+    - Imports
+    - Local types and interfaces (but, if this is a Nuxt project, prefer to use the types folder instead)
+    - Constants, refs, and reactive variables.  Also defineModel, defineProps, defineEmits, and other 'define*' functions.
+    - Lifecycle hooks (onMounted, onUnmounted, etc.)
+    - Computed properties
+    - Methods.  For these, the order is different.  Don't use function declarations unless it is absolutely needed.  Do not group methods by topic.  Order them with this procedure:
+        - Sort the method names alphabetically.
+        - If a method calls another method in the same script, move the called method so its definition is immediately after the caller.  Calls to imports do not count.  Repeat until every local callee sits immediately after its caller.
+        - Example: alphabetical order is `alpha`, `bravo`, `foxtrot`, `golf`.  `foxtrot` calls `bravo`, so `bravo` moves to sit immediately after `foxtrot`:
+```ts
+    const alpha = () => null;
+
+    const foxtrot = () => (bravo(3));
+
+    const bravo = (input: number) => (input);
+
+    const golf = () => null;
+```
+
+- Organize the file in this order: <template>, <script>, <style>.  Use the appropriate version of the 'script' element as discussed above.

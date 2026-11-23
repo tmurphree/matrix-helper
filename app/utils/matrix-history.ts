@@ -58,6 +58,8 @@ export const readHistory = (): Map<number, number[]>[] => {
     return getHistoryKeys().map((key) => {
         const storedMatrix = localStorage.getItem(key);
 
+        // getHistoryKeys only returns keys that exist in localStorage, so getItem cannot return null here.
+        /* v8 ignore if -- @preserve */
         if (storedMatrix === null) {
             throw new Error(`Matrix history ${key} is missing`);
         }

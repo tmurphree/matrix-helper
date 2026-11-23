@@ -6,7 +6,7 @@ description: >-
 
 # Vitest unit tests
 
-Follow [vitest.mdc](../../rules/vitest.mdc) for conventions. Only change the test file unless the user asks otherwise.
+Follow [vitest.mdc](../../rules/vitest.mdc) for conventions. Only change the test file unless the user asks otherwise. Exception: v8 ignore hints in source files, following vitest.mdc `# Coverage`, after the user approves them.
 
 # Workflow
 1. Read the implementation file and list behaviors worth testing (handlers, branches, thrown errors).
@@ -15,7 +15,8 @@ Follow [vitest.mdc](../../rules/vitest.mdc) for conventions. Only change the tes
 4. For **delegation**: module-level `vi.hoisted` + thin `vi.mock`; per-test `mockImplementation`; assert the method spy.
 5. In `describe` `beforeEach`, set `mockImplementation` then mount when tests share a wrapper.
 6. `afterEach`: `vi.clearAllMocks()` and unmount; add `restoreAllMocks` / `unstubAllGlobals` only if the file uses `spyOn` or `stubGlobal`.
-7. Run `npm test -- <spec-path>` and fix failures before finishing.
+7. If coverage still reports a line that no test can reach through the public API, list it for the user and propose a v8 ignore hint per vitest.mdc `# Coverage`. Do not write a contrived test for it.
+8. Run `npm test -- <spec-path>` and fix failures before finishing.
 
 # Module scope versus per-test setup
 | Module scope (once per file) | Per-test (`beforeEach` / `afterEach`) |
