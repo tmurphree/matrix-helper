@@ -16,13 +16,7 @@
                     <input class="ms-2" type="number" id="row-count" v-model.number="matrixRowLength" />
                     <br />
                     <label class="form-label fw-semibold" for="column-count">Column count:</label>
-                    <input
-                        class="ms-2"
-                        type="number"
-                        id="column-count"
-                        v-model.number="matrixColumnLength"
-                        @change="changeColumnCount"
-                    />
+                    <input class="ms-2" type="number" id="column-count" v-model.number="matrixColumnLength" />
                 </div>
                 <div class="mb-3">
                     <label class="form-label fw-semibold" for="matrix-data"> Matrix data </label>
@@ -148,6 +142,10 @@
 
     watch(matrixRowLength, (): void => {
         changeRowCount();
+    });
+
+    watch(matrixColumnLength, (): void => {
+        changeColumnCount();
     });
 
     const onTransformationApplied = (steps: Map<number, number[]>[]): void => {

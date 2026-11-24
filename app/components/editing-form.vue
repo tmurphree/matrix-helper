@@ -28,7 +28,7 @@
                                 />
                                 by
                                 <input
-                                    v-model="multiplyOperationValue"
+                                    v-model.number="multiplyOperationValue"
                                     class="form-control form-control-sm matrix-number-input"
                                     type="number"
                                 />

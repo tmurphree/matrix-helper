@@ -60,7 +60,6 @@ const setColumnCount = async ({
     const columnCountInput = component.find('#column-count');
 
     await columnCountInput.setValue(String(columnCount));
-    await columnCountInput.trigger('change');
     await flushPromises();
 };
 
