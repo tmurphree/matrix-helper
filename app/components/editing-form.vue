@@ -9,7 +9,7 @@
                 }}</pre>
             </div>
             <div>
-                <h3 class="h6 text-uppercase text-body-secondary">Next operation (placeholder)</h3>
+                <h3 class="h6 text-uppercase text-body-secondary">Next operation</h3>
                 <ul class="list-group list-group-flush mb-3">
                     <li class="list-group-item px-0">
                         <label class="d-flex flex-wrap align-items-center gap-2">
