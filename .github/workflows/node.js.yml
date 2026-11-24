@@ -13,3 +13,7 @@ jobs:
         uses: ./.github/workflows/run-node-command.yml
         with:
             command: npm run build && npm run test:coverage
+    typecheck:
+        uses: ./.github/workflows/run-node-command.yml
+        with:
+            command: npm run typecheck
