@@ -9,7 +9,7 @@
                 }}</pre>
             </div>
             <div>
-                <h3 class="h6 text-uppercase text-body-secondary">Next operation (placeholder)</h3>
+                <h3 class="h6 text-uppercase text-body-secondary">Next operation</h3>
                 <ul class="list-group list-group-flush mb-3">
                     <li class="list-group-item px-0">
                         <label class="d-flex flex-wrap align-items-center gap-2">
@@ -28,7 +28,7 @@
                                 />
                                 by
                                 <input
-                                    v-model="multiplyOperationValue"
+                                    v-model.number="multiplyOperationValue"
                                     class="form-control form-control-sm matrix-number-input"
                                     type="number"
                                 />
@@ -87,14 +87,14 @@
 </template>
 
 <script setup lang="ts">
-    import type { MatrixTransformation } from '../types/matrix-transformation';
+    import type { MatrixTransformation, MatrixTransformationStep } from '../types/matrix-transformation';
     import { applyMatrixTransformation } from '../utils/apply-matrix-transformation';
     import { formatMatrix } from '../utils/format-matrix';
 
     type OperationType = 'multiply' | 'add';
 
     const emit = defineEmits<{
-        'transformation-applied': [steps: Map<number, number[]>[]];
+        'transformation-applied': [steps: MatrixTransformationStep[]];
     }>();
 
     const matrix = defineModel<Map<number, number[]>>('matrix', {

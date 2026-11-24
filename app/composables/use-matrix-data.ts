@@ -29,7 +29,7 @@ export const useMatrixData = async () => {
                 index === currentMatrixKey - 1 ? 1 : 0;
             const arrayToAppend = Array.from({ length: matrixColumnLength.value }, rowFillingFunction);
 
-            matrix.value.set(currentMatrixKey, matrix.value.get(currentMatrixKey).concat(arrayToAppend));
+            matrix.value.set(currentMatrixKey, currentMatrixValue.concat(arrayToAppend));
         }
 
         matrixColumnLength.value = matrixColumnLength.value * 2;

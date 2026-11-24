@@ -48,6 +48,7 @@ describe('useMatrixHistory', () => {
         const historyApi = mountComposable();
 
         expect(historyApi.isLocalStorageEnabled.value).toBe(true);
+        expect(historyApi.hasHistory.value).toBe(false);
     });
 
     it('disables local storage after mount when it is unavailable', () => {
@@ -73,7 +74,8 @@ describe('useMatrixHistory', () => {
 
         const historyApi = mountComposable();
 
-        expect(historyApi.history.value).toEqual([firstMatrix]);
+        expect(historyApi.history.value).toEqual([{ matrix: firstMatrix }]);
+        expect(historyApi.hasHistory.value).toBe(true);
     });
 
     describe('startHistory', () => {
@@ -84,8 +86,8 @@ describe('useMatrixHistory', () => {
 
             historyApi.startHistory({ matrix: firstMatrix });
 
-            expect(historyApi.history.value).toEqual([firstMatrix]);
-            expect(readHistory()).toEqual([firstMatrix]);
+            expect(historyApi.history.value).toEqual([{ matrix: firstMatrix }]);
+            expect(readHistory()).toEqual([{ matrix: firstMatrix }]);
         });
     });
 
@@ -94,9 +96,18 @@ describe('useMatrixHistory', () => {
             const historyApi = mountComposable();
             historyApi.startHistory({ matrix: firstMatrix });
 
-            historyApi.recordSteps({ steps: [secondMatrix, firstMatrix] });
+            historyApi.recordSteps({
+                steps: [
+                    { matrix: secondMatrix, summary: '2R1' },
+                    { matrix: firstMatrix, summary: 'R1 + R2 -> R1' },
+                ],
+            });
 
-            expect(historyApi.history.value).toEqual([firstMatrix, secondMatrix, firstMatrix]);
+            expect(historyApi.history.value).toEqual([
+                { matrix: firstMatrix },
+                { matrix: secondMatrix, summary: '2R1' },
+                { matrix: firstMatrix, summary: 'R1 + R2 -> R1' },
+            ]);
         });
     });
 

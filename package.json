@@ -11,7 +11,9 @@
         "@commitlint/cli": "21.2.4",
         "@commitlint/config-conventional": "21.2.4",
         "@nuxt/test-utils": "4.3.4",
+        "@types/bootstrap": "5.2.11",
         "@types/node": "24.12.0",
+        "@typescript-eslint/parser": "8.74.0",
         "@vitest/coverage-v8": "5.1.0",
         "@vue/test-utils": "2.4.11",
         "eslint": "10.15.0",
@@ -22,6 +24,7 @@
         "prettier-plugin-organize-imports": "4.3.0",
         "typescript": "5.9.3",
         "vitest": "5.1.0",
+        "vue-eslint-parser": "10.4.2",
         "vue-tsc": "3.3.14"
     },
     "engines": {
@@ -49,7 +52,8 @@
         "preview": "nuxt preview",
         "test": "vitest run",
         "test:coverage": "vitest run --coverage",
-        "test:watch": "vitest"
+        "test:watch": "vitest",
+        "typecheck": "nuxt typecheck"
     },
     "type": "module",
     "version": "1.0.0"

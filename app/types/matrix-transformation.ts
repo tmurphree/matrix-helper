@@ -15,7 +15,12 @@ export type AddMatrixTransformation = {
 
 export type MatrixTransformation = MultiplyMatrixTransformation | AddMatrixTransformation;
 
+export type MatrixTransformationStep = {
+    matrix: Map<number, number[]>;
+    summary: string;
+};
+
 export type MatrixTransformationResult = {
     matrix: Map<number, number[]>;
-    steps: Map<number, number[]>[];
+    steps: MatrixTransformationStep[];
 };

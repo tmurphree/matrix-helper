@@ -1,6 +1,11 @@
 export const MATRIX_HISTORY_KEY_PREFIX = 'matrix-history-';
 export const MAX_MATRIX_HISTORY_STEPS = 999;
 
+export type MatrixHistoryEntry = {
+    matrix: Map<number, number[]>;
+    summary?: string;
+};
+
 const STEP_NUMBER_DIGITS = String(MAX_MATRIX_HISTORY_STEPS).length;
 const STORAGE_PROBE_KEY = 'matrix-helper-storage-probe';
 const MATRIX_HISTORY_KEY_PATTERN = new RegExp(`^${MATRIX_HISTORY_KEY_PREFIX}\\d{${STEP_NUMBER_DIGITS}}$`);
@@ -36,7 +41,54 @@ const buildHistoryKey = (stepNumber: number): string => {
     return `${MATRIX_HISTORY_KEY_PREFIX}${String(stepNumber).padStart(STEP_NUMBER_DIGITS, '0')}`;
 };
 
-export const recordHistory = ({ matrix }: { matrix: Map<number, number[]> }): void => {
+const isNumberArray = (value: unknown): value is number[] => {
+    return Array.isArray(value) && value.every((element) => typeof element === 'number');
+};
+
+const isMatrixEntries = (value: unknown): value is [number, number[]][] => {
+    if (!Array.isArray(value)) {
+        return false;
+    }
+
+    return value.every((entry) => {
+        if (!Array.isArray(entry) || entry.length !== 2) {
+            return false;
+        }
+
+        const rowId: unknown = entry[0];
+        const row: unknown = entry[1];
+
+        return typeof rowId === 'number' && isNumberArray(row);
+    });
+};
+
+const parseHistoryEntry = (value: unknown): MatrixHistoryEntry | undefined => {
+    if (isMatrixEntries(value)) {
+        return { matrix: new Map(value) };
+    }
+
+    if (typeof value !== 'object' || value === null) {
+        return undefined;
+    }
+
+    const record = value as { matrix?: unknown; summary?: unknown };
+
+    if (!isMatrixEntries(record.matrix)) {
+        return undefined;
+    }
+
+    if (record.summary !== undefined && typeof record.summary !== 'string') {
+        return undefined;
+    }
+
+    if (record.summary === undefined) {
+        return { matrix: new Map(record.matrix) };
+    }
+
+    return { matrix: new Map(record.matrix), summary: record.summary };
+};
+
+export const recordHistory = ({ matrix, summary }: { matrix: Map<number, number[]>; summary?: string }): void => {
     if (!isLocalStorageAvailable()) {
         return;
     }
@@ -47,25 +99,40 @@ export const recordHistory = ({ matrix }: { matrix: Map<number, number[]> }): vo
         throw new Error(`Matrix history cannot have more than ${MAX_MATRIX_HISTORY_STEPS} steps`);
     }
 
-    localStorage.setItem(buildHistoryKey(stepNumber), JSON.stringify([...matrix.entries()]));
+    const storedEntry =
+        summary === undefined ? { matrix: [...matrix.entries()] } : { matrix: [...matrix.entries()], summary };
+
+    localStorage.setItem(buildHistoryKey(stepNumber), JSON.stringify(storedEntry));
 };
 
-export const readHistory = (): Map<number, number[]>[] => {
+export const readHistory = (): MatrixHistoryEntry[] => {
     if (!isLocalStorageAvailable()) {
         return [];
     }
 
-    return getHistoryKeys().map((key) => {
-        const storedMatrix = localStorage.getItem(key);
+    const entries: MatrixHistoryEntry[] = [];
+
+    for (const key of getHistoryKeys()) {
+        const storedEntry = localStorage.getItem(key);
 
         // getHistoryKeys only returns keys that exist in localStorage, so getItem cannot return null here.
         /* v8 ignore if -- @preserve */
-        if (storedMatrix === null) {
-            throw new Error(`Matrix history ${key} is missing`);
+        if (storedEntry === null) {
+            continue;
         }
 
-        return new Map<number, number[]>(JSON.parse(storedMatrix));
-    });
+        try {
+            const entry = parseHistoryEntry(JSON.parse(storedEntry));
+
+            if (entry !== undefined) {
+                entries.push(entry);
+            }
+        } catch {
+            continue;
+        }
+    }
+
+    return entries;
 };
 
 export const clearHistory = (): void => {

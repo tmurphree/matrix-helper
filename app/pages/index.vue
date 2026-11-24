@@ -16,13 +16,7 @@
                     <input class="ms-2" type="number" id="row-count" v-model.number="matrixRowLength" />
                     <br />
                     <label class="form-label fw-semibold" for="column-count">Column count:</label>
-                    <input
-                        class="ms-2"
-                        type="number"
-                        id="column-count"
-                        v-model.number="matrixColumnLength"
-                        @change="changeColumnCount"
-                    />
+                    <input class="ms-2" type="number" id="column-count" v-model.number="matrixColumnLength" />
                 </div>
                 <div class="mb-3">
                     <label class="form-label fw-semibold" for="matrix-data"> Matrix data </label>
@@ -81,6 +75,7 @@
 
 <script setup lang="ts">
     import type { Tooltip } from 'bootstrap';
+    import type { MatrixTransformationStep } from '../types/matrix-transformation';
 
     useSeoMeta({
         title: 'Home',
@@ -104,7 +99,7 @@
 
     const { answerConfirmation, askConfirmation, confirmModal } = useConfirmModal();
 
-    const { hasHistory, history, isLocalStorageEnabled, recordSteps, resetHistory, startHistory } = useMatrixHistory();
+    const { history, isLocalStorageEnabled, recordSteps, resetHistory, startHistory } = useMatrixHistory();
 
     const isRectangularMatrix = computed((): boolean => matrixColumnLength.value !== matrixRowLength.value);
 
@@ -135,9 +130,10 @@
 
     onMounted((): void => {
         void syncAddIdentityMatrixTooltip();
-        if (hasHistory.value) {
+        const latestEntry = history.value.at(-1);
+        if (latestEntry !== undefined) {
             isMatrixInitialized.value = true;
-            matrix.value = history.value[history.value.length - 1];
+            matrix.value = latestEntry.matrix;
         }
     });
 
@@ -149,7 +145,11 @@
         changeRowCount();
     });
 
-    const onTransformationApplied = (steps: Map<number, number[]>[]): void => {
+    watch(matrixColumnLength, (): void => {
+        changeColumnCount();
+    });
+
+    const onTransformationApplied = (steps: MatrixTransformationStep[]): void => {
         recordSteps({ steps });
     };
 
