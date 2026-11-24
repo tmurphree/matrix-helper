@@ -75,6 +75,7 @@
 
 <script setup lang="ts">
     import type { Tooltip } from 'bootstrap';
+    import type { MatrixTransformationStep } from '../types/matrix-transformation';
 
     useSeoMeta({
         title: 'Home',
@@ -129,10 +130,10 @@
 
     onMounted((): void => {
         void syncAddIdentityMatrixTooltip();
-        const latestMatrix = history.value.at(-1);
-        if (latestMatrix !== undefined) {
+        const latestEntry = history.value.at(-1);
+        if (latestEntry !== undefined) {
             isMatrixInitialized.value = true;
-            matrix.value = latestMatrix;
+            matrix.value = latestEntry.matrix;
         }
     });
 
@@ -148,7 +149,7 @@
         changeColumnCount();
     });
 
-    const onTransformationApplied = (steps: Map<number, number[]>[]): void => {
+    const onTransformationApplied = (steps: MatrixTransformationStep[]): void => {
         recordSteps({ steps });
     };
 

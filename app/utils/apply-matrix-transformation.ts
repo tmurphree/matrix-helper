@@ -2,6 +2,7 @@ import type {
     AddMatrixTransformation,
     MatrixTransformation,
     MatrixTransformationResult,
+    MatrixTransformationStep,
     MultiplyMatrixTransformation,
 } from '../types/matrix-transformation';
 
@@ -38,7 +39,15 @@ const applyMultiplyTransformation = ({
         })
     );
 
-    const steps = transformation.multiplier === IDENTITY_SCALE ? [] : [new Map(nextMatrix)];
+    const steps: MatrixTransformationStep[] =
+        transformation.multiplier === IDENTITY_SCALE
+            ? []
+            : [
+                  {
+                      matrix: new Map(nextMatrix),
+                      summary: `${transformation.multiplier}R${transformation.rowId}`,
+                  },
+              ];
 
     return { matrix: nextMatrix, steps };
 };
@@ -93,28 +102,30 @@ const applyAddTransformation = ({
     // Each step snapshots the matrix as the student would write it on paper,
     // so scaled rows stay scaled until the final "unscale" step.
     const workingMatrix = new Map(matrix);
-    const steps: Map<number, number[]>[] = [];
+    const steps: MatrixTransformationStep[] = [];
 
-    const recordStep = (): void => {
-        steps.push(new Map(workingMatrix));
+    const recordStep = ({ summary }: { summary: string }): void => {
+        steps.push({ matrix: new Map(workingMatrix), summary });
     };
 
     if (transformation.coefficient01 !== IDENTITY_SCALE) {
         workingMatrix.set(transformation.rowId01, transformed01);
-        recordStep();
+        recordStep({ summary: `${transformation.coefficient01}R${transformation.rowId01}` });
     }
 
     if (transformation.coefficient02 !== IDENTITY_SCALE) {
         workingMatrix.set(transformation.rowId02, transformed02);
-        recordStep();
+        recordStep({ summary: `${transformation.coefficient02}R${transformation.rowId02}` });
     }
 
     workingMatrix.set(transformation.rowIdToReplace, replacementRow);
-    recordStep();
+    recordStep({
+        summary: `R${transformation.rowId01} + R${transformation.rowId02} -> R${transformation.rowIdToReplace}`,
+    });
 
     if (coefficientToRestore !== IDENTITY_SCALE) {
         workingMatrix.set(rowIdToRestore, rowToRestore);
-        recordStep();
+        recordStep({ summary: `unscale (1/${coefficientToRestore} R${rowIdToRestore})` });
     }
 
     return { matrix: new Map(workingMatrix), steps };

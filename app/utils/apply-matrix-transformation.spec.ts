@@ -202,10 +202,13 @@ describe('applyMatrixTransformation', () => {
             });
 
             expect(steps).toEqual([
-                new Map([
-                    [1, [10, 12]],
-                    [2, [7, 8]],
-                ]),
+                {
+                    matrix: new Map([
+                        [1, [10, 12]],
+                        [2, [7, 8]],
+                    ]),
+                    summary: '2R1',
+                },
             ]);
         });
 
@@ -238,24 +241,36 @@ describe('applyMatrixTransformation', () => {
             });
 
             expect(steps).toEqual([
-                new Map([
-                    [1, [20, 24]],
-                    [2, [7, 8]],
-                ]),
-                new Map([
-                    [1, [20, 24]],
-                    [2, [21, 24]],
-                ]),
-                new Map([
-                    [1, [20, 24]],
-                    [2, [41, 48]],
-                ]),
-                new Map([
-                    [1, [10, 12]],
-                    [2, [41, 48]],
-                ]),
+                {
+                    matrix: new Map([
+                        [1, [20, 24]],
+                        [2, [7, 8]],
+                    ]),
+                    summary: '2R1',
+                },
+                {
+                    matrix: new Map([
+                        [1, [20, 24]],
+                        [2, [21, 24]],
+                    ]),
+                    summary: '3R2',
+                },
+                {
+                    matrix: new Map([
+                        [1, [20, 24]],
+                        [2, [41, 48]],
+                    ]),
+                    summary: 'R1 + R2 -> R2',
+                },
+                {
+                    matrix: new Map([
+                        [1, [10, 12]],
+                        [2, [41, 48]],
+                    ]),
+                    summary: 'unscale (1/2 R1)',
+                },
             ]);
-            expect(nextMatrix).toEqual(steps[3]);
+            expect(nextMatrix).toEqual(steps[3]?.matrix);
         });
 
         it('records scale, scale, sum, and unscale steps when R1 is replaced', () => {
@@ -272,22 +287,34 @@ describe('applyMatrixTransformation', () => {
             });
 
             expect(steps).toEqual([
-                new Map([
-                    [1, [10, 12]],
-                    [2, [7, 8]],
-                ]),
-                new Map([
-                    [1, [10, 12]],
-                    [2, [21, 24]],
-                ]),
-                new Map([
-                    [1, [31, 36]],
-                    [2, [21, 24]],
-                ]),
-                new Map([
-                    [1, [31, 36]],
-                    [2, [7, 8]],
-                ]),
+                {
+                    matrix: new Map([
+                        [1, [10, 12]],
+                        [2, [7, 8]],
+                    ]),
+                    summary: '2R1',
+                },
+                {
+                    matrix: new Map([
+                        [1, [10, 12]],
+                        [2, [21, 24]],
+                    ]),
+                    summary: '3R2',
+                },
+                {
+                    matrix: new Map([
+                        [1, [31, 36]],
+                        [2, [21, 24]],
+                    ]),
+                    summary: 'R1 + R2 -> R1',
+                },
+                {
+                    matrix: new Map([
+                        [1, [31, 36]],
+                        [2, [7, 8]],
+                    ]),
+                    summary: 'unscale (1/3 R2)',
+                },
             ]);
         });
 
@@ -305,10 +332,13 @@ describe('applyMatrixTransformation', () => {
             });
 
             expect(steps).toEqual([
-                new Map([
-                    [1, [5, 6]],
-                    [2, [12, 14]],
-                ]),
+                {
+                    matrix: new Map([
+                        [1, [5, 6]],
+                        [2, [12, 14]],
+                    ]),
+                    summary: 'R1 + R2 -> R2',
+                },
             ]);
         });
 
@@ -326,18 +356,27 @@ describe('applyMatrixTransformation', () => {
             });
 
             expect(steps).toEqual([
-                new Map([
-                    [1, [15, 18]],
-                    [2, [7, 8]],
-                ]),
-                new Map([
-                    [1, [15, 18]],
-                    [2, [22, 26]],
-                ]),
-                new Map([
-                    [1, [5, 6]],
-                    [2, [22, 26]],
-                ]),
+                {
+                    matrix: new Map([
+                        [1, [15, 18]],
+                        [2, [7, 8]],
+                    ]),
+                    summary: '3R1',
+                },
+                {
+                    matrix: new Map([
+                        [1, [15, 18]],
+                        [2, [22, 26]],
+                    ]),
+                    summary: 'R1 + R2 -> R2',
+                },
+                {
+                    matrix: new Map([
+                        [1, [5, 6]],
+                        [2, [22, 26]],
+                    ]),
+                    summary: 'unscale (1/3 R1)',
+                },
             ]);
         });
 

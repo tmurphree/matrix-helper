@@ -2,6 +2,7 @@ import { mountSuspended } from '@nuxt/test-utils/runtime';
 import { flushPromises } from '@vue/test-utils';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { computed, ref, type Ref } from 'vue';
+import type { MatrixHistoryEntry } from '../utils/matrix-history';
 
 const { recordStepsSpy, resetHistorySpy, startHistorySpy, tooltipDisposeSpy, TooltipMock, useMatrixHistoryMock } =
     vi.hoisted(() => {
@@ -69,11 +70,11 @@ const getEditableRowData = (component: MountedIndex): number[][] => {
 
 describe('Index', () => {
     let component: MountedIndex;
-    let history: Ref<Map<number, number[]>[]>;
+    let history: Ref<MatrixHistoryEntry[]>;
     let isLocalStorageEnabled: Ref<boolean>;
 
     beforeEach(async (): Promise<void> => {
-        history = ref<Map<number, number[]>[]>([]);
+        history = ref<MatrixHistoryEntry[]>([]);
         isLocalStorageEnabled = ref(false);
 
         useMatrixHistoryMock.mockImplementation(() => ({
@@ -101,7 +102,7 @@ describe('Index', () => {
                 [2, [0, 0]],
             ]);
 
-            history.value = [lastStep];
+            history.value = [{ matrix: lastStep }];
             component.unmount();
             component = await mountSuspended(Index);
 

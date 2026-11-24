@@ -1,7 +1,14 @@
-import { clearHistory, isLocalStorageAvailable, readHistory, recordHistory } from '../utils/matrix-history';
+import type { MatrixTransformationStep } from '../types/matrix-transformation';
+import {
+    clearHistory,
+    isLocalStorageAvailable,
+    readHistory,
+    recordHistory,
+    type MatrixHistoryEntry,
+} from '../utils/matrix-history';
 
 export const useMatrixHistory = () => {
-    const history = ref<Map<number, number[]>[]>([]);
+    const history = ref<MatrixHistoryEntry[]>([]);
     const isLocalStorageEnabled = ref(false);
 
     const hasHistory = computed((): boolean => history.value.length > 0);
@@ -16,9 +23,9 @@ export const useMatrixHistory = () => {
         loadHistory();
     };
 
-    const recordSteps = ({ steps }: { steps: Map<number, number[]>[] }): void => {
+    const recordSteps = ({ steps }: { steps: MatrixTransformationStep[] }): void => {
         for (const step of steps) {
-            recordHistory({ matrix: step });
+            recordHistory({ matrix: step.matrix, summary: step.summary });
         }
 
         loadHistory();

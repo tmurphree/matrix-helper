@@ -87,14 +87,14 @@
 </template>
 
 <script setup lang="ts">
-    import type { MatrixTransformation } from '../types/matrix-transformation';
+    import type { MatrixTransformation, MatrixTransformationStep } from '../types/matrix-transformation';
     import { applyMatrixTransformation } from '../utils/apply-matrix-transformation';
     import { formatMatrix } from '../utils/format-matrix';
 
     type OperationType = 'multiply' | 'add';
 
     const emit = defineEmits<{
-        'transformation-applied': [steps: Map<number, number[]>[]];
+        'transformation-applied': [steps: MatrixTransformationStep[]];
     }>();
 
     const matrix = defineModel<Map<number, number[]>>('matrix', {

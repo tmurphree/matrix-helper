@@ -49,14 +49,20 @@ describe('matrix-history', () => {
         it('stores the matrix entries as JSON under a zero-padded key', () => {
             recordHistory({ matrix: firstMatrix });
 
-            expect(localStorage.getItem('matrix-history-001')).toBe('[[1,[5,6]],[2,[7,8]]]');
+            expect(localStorage.getItem('matrix-history-001')).toBe('{"matrix":[[1,[5,6]],[2,[7,8]]]}');
+        });
+
+        it('stores a summary when one is recorded', () => {
+            recordHistory({ matrix: secondMatrix, summary: '2R1' });
+
+            expect(localStorage.getItem('matrix-history-001')).toBe('{"matrix":[[1,[10,12]],[2,[7,8]]],"summary":"2R1"}');
         });
 
         it('uses the next step number for each record', () => {
             recordHistory({ matrix: firstMatrix });
-            recordHistory({ matrix: secondMatrix });
+            recordHistory({ matrix: secondMatrix, summary: '2R1' });
 
-            expect(localStorage.getItem('matrix-history-002')).toBe('[[1,[10,12]],[2,[7,8]]]');
+            expect(localStorage.getItem('matrix-history-002')).toBe('{"matrix":[[1,[10,12]],[2,[7,8]]],"summary":"2R1"}');
         });
 
         it('allows exactly the maximum number of steps', () => {
@@ -83,9 +89,31 @@ describe('matrix-history', () => {
     describe('readHistory', () => {
         it('returns the recorded matrices in step order as Maps', () => {
             recordHistory({ matrix: firstMatrix });
-            recordHistory({ matrix: secondMatrix });
+            recordHistory({ matrix: secondMatrix, summary: '2R1' });
 
-            expect(readHistory()).toEqual([firstMatrix, secondMatrix]);
+            expect(readHistory()).toEqual([{ matrix: firstMatrix }, { matrix: secondMatrix, summary: '2R1' }]);
+        });
+
+        it('reads a legacy entries array as a matrix with no summary', () => {
+            localStorage.setItem('matrix-history-001', '[[1,[5,6]],[2,[7,8]]]');
+
+            expect(readHistory()).toEqual([{ matrix: firstMatrix }]);
+        });
+
+        it('skips invalid stored values', () => {
+            localStorage.setItem('matrix-history-001', 'not json');
+            localStorage.setItem('matrix-history-002', 'null');
+            localStorage.setItem('matrix-history-003', '5');
+            localStorage.setItem('matrix-history-004', '{"matrix":"nope"}');
+            localStorage.setItem('matrix-history-005', '{"matrix":[[1,[1,2]]],"summary":1}');
+            localStorage.setItem('matrix-history-006', '["nope"]');
+            localStorage.setItem('matrix-history-007', '[[1]]');
+            localStorage.setItem('matrix-history-008', '[["row",[1]]]');
+            localStorage.setItem('matrix-history-009', '[[1,"row"]]');
+            localStorage.setItem('matrix-history-010', '[[1,[1,"a"]]]');
+            localStorage.setItem('matrix-history-011', '[[1,[5,6]],[2,[7,8]]]');
+
+            expect(readHistory()).toEqual([{ matrix: firstMatrix }]);
         });
 
         it('returns an empty array when nothing is recorded', () => {
@@ -115,7 +143,7 @@ describe('matrix-history', () => {
             clearHistory();
             recordHistory({ matrix: secondMatrix });
 
-            expect(localStorage.getItem('matrix-history-001')).toBe('[[1,[10,12]],[2,[7,8]]]');
+            expect(localStorage.getItem('matrix-history-001')).toBe('{"matrix":[[1,[10,12]],[2,[7,8]]]}');
         });
 
         it('does nothing when localStorage is unavailable', () => {
