@@ -44,9 +44,11 @@ const mountOpenModal = async (): Promise<{
 };
 
 const getWindowKeyDownCaptureListener = (): ((event: KeyboardEvent) => void) => {
+    // Nuxt's tsconfig includes the webworker lib, so the mocked event name is a worker
+    // event and cannot be compared directly with "keydown".
     const listenerCall = vi
         .mocked(window.addEventListener)
-        .mock.calls.find(([eventType, , useCapture]) => eventType === 'keydown' && useCapture === true);
+        .mock.calls.find(([eventType, , useCapture]) => String(eventType) === 'keydown' && useCapture === true);
 
     if (listenerCall === undefined) {
         throw new Error('keydown capture listener was not registered');

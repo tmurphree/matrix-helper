@@ -104,7 +104,7 @@
 
     const { answerConfirmation, askConfirmation, confirmModal } = useConfirmModal();
 
-    const { hasHistory, history, isLocalStorageEnabled, recordSteps, resetHistory, startHistory } = useMatrixHistory();
+    const { history, isLocalStorageEnabled, recordSteps, resetHistory, startHistory } = useMatrixHistory();
 
     const isRectangularMatrix = computed((): boolean => matrixColumnLength.value !== matrixRowLength.value);
 
@@ -135,9 +135,10 @@
 
     onMounted((): void => {
         void syncAddIdentityMatrixTooltip();
-        if (hasHistory.value) {
+        const latestMatrix = history.value.at(-1);
+        if (latestMatrix !== undefined) {
             isMatrixInitialized.value = true;
-            matrix.value = history.value[history.value.length - 1];
+            matrix.value = latestMatrix;
         }
     });
 

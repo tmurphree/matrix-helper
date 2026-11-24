@@ -75,7 +75,15 @@ const applyAddTransformation = ({
         row: row02,
         multiplier: transformation.coefficient02,
     });
-    const replacementRow = transformed01.map((element, index) => element + transformed02[index]);
+    const replacementRow = transformed01.map((element, index): number => {
+        const pairedElement = transformed02[index];
+
+        if (pairedElement === undefined) {
+            throw new Error(`Matrix column ${index + 1} is missing`);
+        }
+
+        return element + pairedElement;
+    });
 
     const isRow01Replaced = transformation.rowIdToReplace === transformation.rowId01;
     const rowIdToRestore = isRow01Replaced ? transformation.rowId02 : transformation.rowId01;

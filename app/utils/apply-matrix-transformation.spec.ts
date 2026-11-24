@@ -115,6 +115,27 @@ describe('applyMatrixTransformation', () => {
             expect(nextMatrix.get(4)).toEqual([23, 6, 9, 12, 15, 20]);
         });
 
+        it('throws when the second source row is shorter than the first', () => {
+            matrix = new Map([
+                [1, [1, 2]],
+                [2, [3]],
+            ]);
+
+            expect(() =>
+                applyMatrixTransformation({
+                    matrix,
+                    transformation: {
+                        type: 'add',
+                        coefficient01: 1,
+                        rowId01: 1,
+                        coefficient02: 1,
+                        rowId02: 2,
+                        rowIdToReplace: 1,
+                    },
+                })
+            ).toThrow('Matrix column 2 is missing');
+        });
+
         it('throws when a source row is missing on add', () => {
             expect(() =>
                 applyMatrixTransformation({
